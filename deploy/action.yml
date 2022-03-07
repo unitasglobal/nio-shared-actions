@@ -5,10 +5,6 @@ inputs:
       description: "create user docs"
       required: false
       default: "true"
-    api_docs:
-      description: "create api docs"
-      required: false
-      default: "false"
     build_requirements:
       description: "build and push the requirements image"
       required: false
@@ -41,12 +37,6 @@ runs:
       shell: bash
       run: |
         ./run docs build-user-docs
-
-    - name: Build api docs for deploy
-      if: ${{ inputs.api_docs }} == "true"
-      shell: bash
-      run: |
-        ./run docs build-api-docs
 
     - name: Deploy to Production
       shell: bash
