@@ -13,10 +13,6 @@ on:
         required: false
         default: true
         type: boolean
-      api_docs:
-        required: false
-        default: false
-        type: boolean
     secrets:
       PROD_AWS_ACCESS_KEY_ID:
         required: true
@@ -38,4 +34,4 @@ jobs:
       - uses: unitasglobal/nio-shared-actions/deploy@main
         with:
           user_docs: ${{ inputs.user_docs }}
-          api_docs: ${{ inputs.api_docs }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}

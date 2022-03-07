@@ -1,14 +1,13 @@
-name: production-deploy
+name: deploy
 description: 'Deploy the app to production'
 inputs:
     user_docs:
       description: "create user docs"
       required: false
       default: "true"
-    api_docs:
-      description: "create api docs"
-      required: false
-      default: "false"
+    repo_token:
+      description: "Github Token"
+      required: true
 runs:
   using: "composite"
   steps:
@@ -21,11 +20,7 @@ runs:
     - name: Ensure Only One Deploy Run
       uses: softprops/turnstyle@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Build and Push Images
-      shell: bash
-      run: ./run docker build-and-push-requirements
+        GITHUB_TOKEN: ${{ inputs.repo_token }}
 
     - name: Build docker-compose env
       shell: bash
@@ -36,12 +31,6 @@ runs:
       shell: bash
       run: |
         ./run docs build-user-docs
-
-    - name: Build api docs for deploy
-      if: ${{ inputs.api_docs }} == "true"
-      shell: bash
-      run: |
-        ./run docs build-api-docs
 
     - name: Deploy to Production
       shell: bash

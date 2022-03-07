@@ -1,5 +1,9 @@
 name: review-cleanup
 description: 'Clean up after a review closes'
+inputs:
+    repo_token:
+      description: "Github Token"
+      required: true
 runs:
   using: "composite"
   steps:
@@ -13,14 +17,14 @@ runs:
       uses: bobheadxi/deployments@v0.4.3
       with:
         step: deactivate-env
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ inputs.repo_token }}
         env: review-${{ github.event.number }}
         desc: Environment Pruned
 
     - name: Ensure Only One Remove Run
       uses: softprops/turnstyle@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ inputs.repo_token }}
 
     - name: Remove Review Stack
       shell: bash

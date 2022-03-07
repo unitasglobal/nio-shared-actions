@@ -86,3 +86,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: unitasglobal/nio-shared-actions/deploy-review@main
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}

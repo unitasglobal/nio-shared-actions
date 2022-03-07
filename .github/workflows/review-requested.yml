@@ -1,5 +1,7 @@
 name: review-requested
 on:
+  pull_request:
+    types: [review_requested]
   workflow_call:
     secrets:
       SLACK_WEBHOOK_URL:
