@@ -9,6 +9,10 @@ inputs:
       description: "create api docs"
       required: false
       default: "false"
+    build_requirements:
+      description: "build and push the requirements image"
+      required: false
+      default: "true"
 runs:
   using: "composite"
   steps:
@@ -24,6 +28,7 @@ runs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build and Push Images
+      if: ${{ inputs.build_requirements }} == "true"
       shell: bash
       run: ./run docker build-and-push-requirements
 

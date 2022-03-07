@@ -17,6 +17,10 @@ on:
         required: false
         default: false
         type: boolean
+      build_requirements:
+        required: false
+        default: true
+        type: boolean
     secrets:
       PROD_AWS_ACCESS_KEY_ID:
         required: true
@@ -39,3 +43,4 @@ jobs:
         with:
           user_docs: ${{ inputs.user_docs }}
           api_docs: ${{ inputs.api_docs }}
+          build_requirements: ${{ inputs.build_requirements }}
