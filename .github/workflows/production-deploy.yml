@@ -35,3 +35,4 @@ jobs:
         with:
           user_docs: ${{ inputs.user_docs }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
+          deploy_flag: "--prod"
