@@ -1,6 +1,11 @@
 name: pull-requests
 on:
   workflow_call:
+    inputs:
+      db_port:
+        required: false
+        type: number
+        default: 5432
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -13,7 +18,7 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_DEFAULT_REGION: us-east-1
   DOCKER_BUILDKIT: 1
-  DB_PORT: 5433
+  DB_PORT: ${{ inputs.db_port }}
 jobs:
   changes:
     runs-on: ubuntu-latest

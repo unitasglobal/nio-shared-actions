@@ -1,0 +1,41 @@
+name: production-deploy
+on:
+  workflow_call:
+    inputs:
+      environment_url:
+        type: string
+        required: true
+      db_port:
+        required: false
+        type: number
+        default: 5432
+      user_docs:
+        required: false
+        default: true
+        type: boolean
+      api_docs:
+        required: false
+        default: false
+        type: boolean
+    secrets:
+      PROD_AWS_ACCESS_KEY_ID:
+        required: true
+      PROD_AWS_SECRET_ACCESS_KEY:
+        required: true
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.PROD_AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }}
+  AWS_DEFAULT_REGION: us-east-1
+  DOCKER_BUILDKIT: 1
+  DB_PORT: ${{ inputs.db_port }}
+jobs:
+  deploy-production:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: ${{ inputs.environment_url }}
+    steps:
+      - uses: unitasglobal/nio-shared-actions/deploy@main
+        with:
+          user_docs: ${{ inputs.user_docs }}
+          api_docs: ${{ inputs.api_docs }}

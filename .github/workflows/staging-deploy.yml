@@ -1,0 +1,39 @@
+name: staging-deploy
+on:
+  workflow_call:
+    inputs:
+      api_name:
+        required: true
+        type: string
+      db_port:
+        required: false
+        type: number
+        default: 5432
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_DEFAULT_REGION: us-east-1
+  DOCKER_BUILDKIT: 1
+  DB_PORT: ${{ inputs.db_port }}
+jobs:
+  deploy-staging:
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: https://nio-nis-api.unitas.dev
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: unitasglobal/nio-shared-actions/deploy@main
+
+      - name: Post to Slack
+        uses: fjogeleit/http-request-action@master
+        with:
+          url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          method: "POST"
+          data: '{"blocks":[{"type":"section","text":{"type":"mrkdwn","text":"${{ inputs.api_name }} has released to Staging"}},{"type":"divider"},{"type":"section","text":{"type":"mrkdwn","text":"Start Production Build"},"accessory":{"type":"button","text":{"type":"plain_text","text":"Open GitHub","emoji":true},"url":"https://github.com/${{ env.GITHUB_REPOSITORY }}/actions/workflows/production-deploy.yml","action_id":"button-action"}}]}'

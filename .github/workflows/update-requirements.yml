@@ -1,0 +1,24 @@
+name: update-requirements
+on:
+  workflow_call:
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_DEFAULT_REGION: us-east-1
+  DOCKER_BUILDKIT: 1
+jobs:
+  build-requirements:
+    name: Build Requirements ECR Image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: unitasglobal/nio-shared-actions/python-setup@main
+
+      - name: Build and Push Images
+        run: ./run docker build-and-push-requirements

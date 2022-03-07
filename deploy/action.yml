@@ -1,0 +1,52 @@
+name: production-deploy
+description: 'Deploy the app to production'
+inputs:
+    user_docs:
+      description: "create user docs"
+      required: false
+      default: "true"
+    api_docs:
+      description: "create api docs"
+      required: false
+      default: "false"
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v2
+
+    - uses: unitasglobal/nio-shared-actions/python-setup@main
+      with:
+        install_node: true
+
+    - name: Ensure Only One Deploy Run
+      uses: softprops/turnstyle@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build and Push Images
+      shell: bash
+      run: ./run docker build-and-push-requirements
+
+    - name: Build docker-compose env
+      shell: bash
+      run: ./run docker build
+
+    - name: Build user docs for deploy
+      if: ${{ inputs.user_docs }} == "true"
+      shell: bash
+      run: |
+        ./run docs build-user-docs
+
+    - name: Build api docs for deploy
+      if: ${{ inputs.api_docs }} == "true"
+      shell: bash
+      run: |
+        ./run docs build-api-docs
+
+    - name: Deploy to Production
+      shell: bash
+      run: ./run cdk deploy --prod
+
+    - name: Test Deployed Stack
+      shell: bash
+      run: ./run test deployed

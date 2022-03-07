@@ -1,0 +1,30 @@
+name: review-requested
+on:
+  workflow_call:
+    secrets:
+      SLACK_WEBHOOK_URL:
+        required: true
+jobs:
+  review-requested:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build quote-safe title
+        id: quote-safe-title
+        run: |
+          title='${{ github.event.pull_request.title }}'
+          title="${title//\"/}"
+          echo "::set-output name=pull-title::${title}"
+      - name: Post to Slack - Requested Reviewer
+        if: ${{ github.event.requested_reviewer }}
+        uses: fjogeleit/http-request-action@master
+        with:
+          url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          method: "POST"
+          data: '{"blocks":[{"type":"context","elements":[{"type":"image","image_url":"${{ github.event.sender.avatar_url }}","alt_text":"avatar"},{"type":"mrkdwn","text":"*${{ github.event.sender.login }}* requested a review from"},{"type":"image","image_url":"${{ github.event.requested_reviewer.avatar_url }}","alt_text":"avatar"},{"type":"mrkdwn","text":"*${{ github.event.requested_reviewer.login }}* for a Pull Request: <${{ github.event.pull_request.html_url }}|${{ steps.quote-safe-title.outputs.pull-title }}>"}]}]}'
+      - name: Post to Slack - Requested Team
+        if: ${{ github.event.requested_team }}
+        uses: fjogeleit/http-request-action@master
+        with:
+          url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          method: "POST"
+          data: '{"blocks":[{"type":"context","elements":[{"type":"image","image_url":"${{ github.event.sender.avatar_url }}","alt_text":"avatar"},{"type":"mrkdwn","text":"*${{ github.event.sender.login }}* requested a review from *${{ github.event.requested_team.name }}* for a Pull Request: <${{ github.event.pull_request.html_url }}|${{ steps.quote-safe-title.outputs.pull-title }}>"}]}]}'
