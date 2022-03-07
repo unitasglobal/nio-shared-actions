@@ -2,6 +2,9 @@ name: staging-deploy
 on:
   workflow_call:
     inputs:
+      environment_url:
+        type: string
+        required: true
       api_name:
         required: true
         type: string
@@ -9,6 +12,14 @@ on:
         required: false
         type: number
         default: 5432
+      user_docs:
+        required: false
+        default: true
+        type: boolean
+      api_docs:
+        required: false
+        default: false
+        type: boolean
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -25,11 +36,14 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: staging
-      url: https://nio-nis-api.unitas.dev
+      url: ${{ inputs.environment_url }}
     steps:
       - uses: actions/checkout@v2
 
       - uses: unitasglobal/nio-shared-actions/deploy@main
+        with:
+          user_docs: ${{ inputs.user_docs }}
+          api_docs: ${{ inputs.api_docs }}
 
       - name: Post to Slack
         uses: fjogeleit/http-request-action@master
