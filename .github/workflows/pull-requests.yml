@@ -1,0 +1,239 @@
+name: pull-requests
+on:
+  workflow_call:
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+      CODECOV_TOKEN:
+        required: true
+      GITHUB_TOKEN:
+        required: true
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_DEFAULT_REGION: us-east-1
+  DOCKER_BUILDKIT: 1
+  DB_PORT: 5433
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      python: ${{ steps.filter.outputs.python }}
+      src: ${{ steps.filter.outputs.src }}
+      tests: ${{ steps.filter.outputs.tests }}
+      stack-files: ${{ steps.filter.outputs.stack-files }}
+      revisions: ${{ steps.filter.outputs.revisions }}
+      ci-files: ${{ steps.filter.outputs.ci-files }}
+    steps:
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            python:
+              - '**/*.py'
+            src:
+              - 'poetry.lock'
+              - 'src/**'
+            tests:
+              - 'tests/**'
+            stack-files:
+              - 'scripts/**'
+              - 'docs/**'
+            revisions:
+              - 'src/db/versions/**'
+            ci-files:
+              - 'Dockerfile'
+              - 'Dockerfile.requirements'
+              - 'bootstrap.sh'
+              - 'docker-compose.yml'
+              - '.github/workflows/pull-requests.yml'
+
+  db-branch-check:
+    name: Check for Alembic Branches
+    needs: changes
+    if: ${{ needs.changes.outputs.revisions == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Install Poetry
+        run: pip install poetry
+
+      - name: Cache Poetry virtualenv
+        uses: actions/cache@v2
+        id: poetry-cache
+        with:
+          path: ~/.cache/pypoetry
+          key: poetry-3.9-${{ hashFiles('poetry.lock', 'pyproject.toml') }}
+          restore-keys: poetry-3.9-
+
+      - name: Install App and Dependencies
+        run: bash bootstrap.sh
+
+      - name: Check for Alembic Branches
+        run: "[[ $(poetry run alembic heads | wc -l) -eq 1 ]]"
+
+  static-analysis:
+    name: Run Self Check
+    needs: changes
+    if: ${{ needs.changes.outputs.python == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Install Poetry
+        run: pip install poetry
+
+      - name: Cache Pre-Commit data
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pre-commit
+          key: pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
+          restore-keys: pre-commit-
+
+      - name: Cache Poetry virtualenv
+        uses: actions/cache@v2
+        id: poetry-cache
+        with:
+          path: ~/.cache/pypoetry
+          key: poetry-3.9-${{ hashFiles('poetry.lock', 'pyproject.toml') }}
+          restore-keys: poetry-3.9-
+
+      - name: Install App and Dependencies
+        run: bash bootstrap.sh
+
+      - name: Run Self Check
+        run: ./run test self-check
+
+  test:
+    name: Run Tests
+    needs: changes
+    if: ${{ needs.changes.outputs.tests == 'true' || needs.changes.outputs.src == 'true' || needs.changes.outputs.ci-files == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Install Poetry
+        run: pip install poetry
+
+      - name: Cache Poetry virtualenv
+        uses: actions/cache@v2
+        id: poetry-cache
+        with:
+          path: ~/.cache/pypoetry
+          key: poetry-3.9-${{ hashFiles('poetry.lock', 'pyproject.toml') }}
+          restore-keys: poetry-3.9-
+
+      - name: Install App and Dependencies
+        run: bash bootstrap.sh
+
+      - name: Execute Tests
+        run: ./run test ci
+
+      - uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: PyTest Results
+          path: junit.xml
+          reporter: java-junit
+
+      - name: Upload to CodeCov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml
+
+      - name: PyTest Results Comment
+        uses: MishaKav/pytest-coverage-comment@v1.0
+        with:
+          junitxml-path: ./junit.xml
+          junitxml-title: Test Results
+
+  deploy-review:
+    name: Deploy Review Environment
+    needs: [changes, static-analysis, test, db-branch-check]
+    if: ${{ failure() != true && cancelled() != true && (needs.changes.outputs.src == 'true' || needs.changes.outputs.stack-files == 'true') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Review Environment
+        uses: bobheadxi/deployments@v0.5.2
+        id: deployment
+        with:
+          step: start
+          token: ${{ secrets.GITHUB_TOKEN }}
+          env: review-${{ github.event.number }}
+          ref: ${{ github.head_ref }}
+          desc: Review Environment for PR ${{ github.event.number }}
+          transient: true
+
+      - uses: actions/checkout@v2
+
+      - name: use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Install Poetry
+        run: pip install poetry
+
+      - name: Cache Poetry virtualenv
+        uses: actions/cache@v2
+        id: poetry-cache
+        with:
+          path: ~/.cache/pypoetry
+          key: poetry-3.9-${{ hashFiles('poetry.lock', 'pyproject.toml') }}
+          restore-keys: poetry-3.9-
+
+      - name: Install App and Dependencies
+        run: bash bootstrap.sh
+
+      - name: Ensure Only One Deploy Run
+        uses: softprops/turnstyle@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build docs for deploy
+        run: |
+          ./run docs build-user-docs
+
+      - name: Deploy Review Stack
+        run: ./run cdk --review ${{ github.event.number }} deploy
+
+      - name: Test Deployed Stack
+        run: ./run test --review ${{ github.event.number }} deployed
+
+      - name: Update Environment URL
+        run: ./run cdk --review ${{ github.event.number }} display --pipeline-key=BASE_URL >> $GITHUB_ENV
+
+      - name: Update Environment Status
+        uses: bobheadxi/deployments@v0.5.2
+        if: always()
+        with:
+          step: finish
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: ${{ job.status }}
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+          env_url: ${{ env.BASE_URL }}
+
