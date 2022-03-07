@@ -1,7 +1,7 @@
 name: python-setup
 description: 'Set up Python (and optioanlly node) environment'
 inputs:
-  install-node:
+  install_node:
     description: 'Install node'
     required: false
     default: "false"
