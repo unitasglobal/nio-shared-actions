@@ -1,0 +1,35 @@
+name: run-tests
+description: 'Run pytest tests for a given repo'
+inputs:
+  codecov-token:
+    description: 'The token used to upload to CodeCov'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v2
+
+    - uses: unitasglobal/nio-shared-actions/python-setup@main
+
+    - name: Execute Tests
+      shell: bash
+      run: ./run test ci
+
+    - uses: dorny/test-reporter@v1
+      if: success() || failure()
+      with:
+        name: PyTest Results
+        path: junit.xml
+        reporter: java-junit
+
+    - name: Upload to CodeCov
+      uses: codecov/codecov-action@v2
+      with:
+        token: ${{ inputs.codecov-token }}
+        files: ./coverage.xml
+
+    - name: PyTest Results Comment
+      uses: MishaKav/pytest-coverage-comment@v1.0
+      with:
+        junitxml-path: ./junit.xml
+        junitxml-title: Test Results

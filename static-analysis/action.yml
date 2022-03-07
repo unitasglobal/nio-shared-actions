@@ -1,0 +1,12 @@
+name: static-analysis
+description: 'Run self check'
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v2
+
+    - uses: unitasglobal/nio-shared-actions/python-setup@main
+
+    - name: Check for Alembic Branches
+      shell: bash
+      run: ./run test self-check

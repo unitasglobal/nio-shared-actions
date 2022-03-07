@@ -1,0 +1,83 @@
+name: pull-requests
+on:
+  workflow_call:
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+      CODECOV_TOKEN:
+        required: true
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_DEFAULT_REGION: us-east-1
+  DOCKER_BUILDKIT: 1
+  DB_PORT: 5433
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      python: ${{ steps.filter.outputs.python }}
+      src: ${{ steps.filter.outputs.src }}
+      tests: ${{ steps.filter.outputs.tests }}
+      stack-files: ${{ steps.filter.outputs.stack-files }}
+      revisions: ${{ steps.filter.outputs.revisions }}
+      ci-files: ${{ steps.filter.outputs.ci-files }}
+    steps:
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            python:
+              - '**/*.py'
+            src:
+              - 'poetry.lock'
+              - 'src/**'
+            tests:
+              - 'tests/**'
+            stack-files:
+              - 'scripts/**'
+              - 'docs/**'
+            revisions:
+              - 'src/db/versions/**'
+            ci-files:
+              - 'Dockerfile'
+              - 'Dockerfile.requirements'
+              - 'bootstrap.sh'
+              - 'docker-compose.yml'
+              - '.github/workflows/pull-requests.yml'
+
+  db-branch-check:
+    name: Check for Alembic Branches
+    needs: changes
+    if: ${{ needs.changes.outputs.revisions == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: unitasglobal/nio-shared-actions/db-branch-check@main
+
+  static-analysis:
+    name: Run Self Check
+    needs: changes
+    if: ${{ needs.changes.outputs.python == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: unitasglobal/nio-shared-actions/static-analysis@main
+
+  test:
+    name: Run Tests
+    needs: changes
+    if: ${{ needs.changes.outputs.tests == 'true' || needs.changes.outputs.src == 'true' || needs.changes.outputs.ci-files == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: unitasglobal/nio-shared-actions/run-tests@main
+        with:
+          codecov-token: ${{ secrets.CODECOV_TOKEN }}
+
+  deploy-review:
+    name: Deploy Review Environment
+    needs: [changes, static-analysis, test, db-branch-check]
+    if: ${{ failure() != true && cancelled() != true && (needs.changes.outputs.src == 'true' || needs.changes.outputs.stack-files == 'true') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: unitasglobal/nio-shared-actions/deploy-review@main

@@ -1,0 +1,52 @@
+name: deploy-review
+description: 'Deploy a review environment'
+runs:
+  using: "composite"
+  steps:
+    - name: Create Review Environment
+      uses: bobheadxi/deployments@v0.5.2
+      id: deployment
+      with:
+        step: start
+        token: ${{ secrets.GITHUB_TOKEN }}
+        env: review-${{ github.event.number }}
+        ref: ${{ github.head_ref }}
+        desc: Review Environment for PR ${{ github.event.number }}
+        transient: true
+
+    - uses: actions/checkout@v2
+
+    - uses: unitasglobal/nio-shared-actions/python-setup@main
+
+    - name: Ensure Only One Deploy Run
+      uses: softprops/turnstyle@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build docs for deploy
+      shell: bash
+      run: |
+        ./run docs build-user-docs
+
+    - name: Deploy Review Stack
+      shell: bash
+      run: ./run cdk --review ${{ github.event.number }} deploy
+
+    - name: Test Deployed Stack
+      shell: bash
+      run: ./run test --review ${{ github.event.number }} deployed
+
+    - name: Update Environment URL
+      shell: bash
+      run: ./run cdk --review ${{ github.event.number }} display --pipeline-key=BASE_URL >> $GITHUB_ENV
+
+    - name: Update Environment Status
+      uses: bobheadxi/deployments@v0.5.2
+      if: always()
+      with:
+        step: finish
+        token: ${{ secrets.GITHUB_TOKEN }}
+        status: ${{ job.status }}
+        deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+        env_url: ${{ env.BASE_URL }}
+

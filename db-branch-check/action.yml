@@ -1,0 +1,12 @@
+name: db-branch-check
+description: 'Test for branched heads in the database'
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v2
+
+    - uses: unitasglobal/nio-shared-actions/python-setup@main
+
+    - name: Check for Alembic Branches
+      shell: bash
+      run: "[[ $(poetry run alembic heads | wc -l) -eq 1 ]]"
