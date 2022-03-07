@@ -1,0 +1,36 @@
+name: python-setup
+description: 'Set up Python (and optioanlly node) environment'
+inputs:
+  install-node:
+    description: 'Install node'
+    required: false
+    default: "false"
+runs:
+  using: "composite"
+  steps:
+    - name: use Node.js
+      uses: actions/setup-node@v2
+      if: ${{ github.event.inputs.install_node }} == "true"
+      with:
+        node-version: "14"
+
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+
+    - name: Install Poetry
+      shell: bash
+      run: pip install poetry
+
+    - name: Cache Poetry virtualenv
+      uses: actions/cache@v2
+      id: poetry-cache
+      with:
+        path: ~/.cache/pypoetry
+        key: poetry-3.9-${{ hashFiles('poetry.lock', 'pyproject.toml') }}
+        restore-keys: poetry-3.9-
+
+    - name: Install App and Dependencies
+      shell: bash
+      run: bash bootstrap.sh
