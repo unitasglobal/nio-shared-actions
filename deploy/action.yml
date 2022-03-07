@@ -5,10 +5,6 @@ inputs:
       description: "create user docs"
       required: false
       default: "true"
-    build_requirements:
-      description: "build and push the requirements image"
-      required: false
-      default: "true"
 runs:
   using: "composite"
   steps:
@@ -22,11 +18,6 @@ runs:
       uses: softprops/turnstyle@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Build and Push Images
-      if: ${{ inputs.build_requirements }} == "true"
-      shell: bash
-      run: ./run docker build-and-push-requirements
 
     - name: Build docker-compose env
       shell: bash

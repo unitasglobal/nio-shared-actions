@@ -13,10 +13,6 @@ on:
         required: false
         default: true
         type: boolean
-      build_requirements:
-        required: false
-        default: true
-        type: boolean
     secrets:
       PROD_AWS_ACCESS_KEY_ID:
         required: true
@@ -38,4 +34,3 @@ jobs:
       - uses: unitasglobal/nio-shared-actions/deploy@main
         with:
           user_docs: ${{ inputs.user_docs }}
-          build_requirements: ${{ inputs.build_requirements }}
