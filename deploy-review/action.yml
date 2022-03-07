@@ -1,5 +1,9 @@
 name: deploy-review
 description: 'Deploy a review environment'
+inputs:
+    repo_token:
+      description: "Github Token"
+      required: true
 runs:
   using: "composite"
   steps:
@@ -8,7 +12,7 @@ runs:
       id: deployment
       with:
         step: start
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ inputs.repo_token }}
         env: review-${{ github.event.number }}
         ref: ${{ github.head_ref }}
         desc: Review Environment for PR ${{ github.event.number }}
@@ -21,7 +25,7 @@ runs:
     - name: Ensure Only One Deploy Run
       uses: softprops/turnstyle@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ inputs.repo_token }}
 
     - name: Build docs for deploy
       shell: bash
@@ -45,7 +49,7 @@ runs:
       if: always()
       with:
         step: finish
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ inputs.repo_token }}
         status: ${{ job.status }}
         deployment_id: ${{ steps.deployment.outputs.deployment_id }}
         env_url: ${{ env.BASE_URL }}

@@ -34,3 +34,4 @@ jobs:
       - uses: unitasglobal/nio-shared-actions/deploy@main
         with:
           user_docs: ${{ inputs.user_docs }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}

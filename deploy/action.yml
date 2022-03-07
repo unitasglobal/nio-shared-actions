@@ -1,10 +1,13 @@
-name: production-deploy
+name: deploy
 description: 'Deploy the app to production'
 inputs:
     user_docs:
       description: "create user docs"
       required: false
       default: "true"
+    repo_token:
+      description: "Github Token"
+      required: true
 runs:
   using: "composite"
   steps:
@@ -17,7 +20,7 @@ runs:
     - name: Ensure Only One Deploy Run
       uses: softprops/turnstyle@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ inputs.repo_token }}
 
     - name: Build docker-compose env
       shell: bash
