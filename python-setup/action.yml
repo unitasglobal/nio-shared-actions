@@ -10,7 +10,7 @@ runs:
   steps:
     - name: use Node.js
       uses: actions/setup-node@v2
-      if: ${{ github.event.inputs.install_node == "true" }}
+      if: ${{ github.event.inputs.install_node == 'true' }}
       with:
         node-version: "14"
 
