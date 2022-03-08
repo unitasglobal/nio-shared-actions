@@ -36,7 +36,7 @@ runs:
         GITHUB_TOKEN: ${{ inputs.repo_token }}
 
     - name: Build docs for deploy
-      if: ${{ inputs.user_docs }} == "true"
+      if: ${{ inputs.user_docs == "true" }}
       shell: bash
       run: |
         ./run docs build-user-docs
@@ -46,7 +46,7 @@ runs:
       run: ./run cdk --review ${{ github.event.number }} deploy
 
     - name: Test Deployed Stack
-      if: ${{ inputs.test }} == "true"
+      if: ${{ inputs.test == "true" }}
       shell: bash
       run: ./run test --review ${{ github.event.number }} deployed
 
