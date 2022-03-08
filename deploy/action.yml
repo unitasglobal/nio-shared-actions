@@ -30,10 +30,6 @@ runs:
       env:
         GITHUB_TOKEN: ${{ inputs.repo_token }}
 
-    - name: Build docker-compose env
-      shell: bash
-      run: ./run docker build
-
     - name: Build user docs for deploy
       if: ${{ inputs.user_docs }} == "true"
       shell: bash
