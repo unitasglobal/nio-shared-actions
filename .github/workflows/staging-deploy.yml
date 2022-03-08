@@ -16,6 +16,11 @@ on:
         required: false
         default: true
         type: boolean
+      test:
+        description: "Test deployed stack"
+        required: false
+        default: "true"
+        type: string
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -42,6 +47,7 @@ jobs:
         with:
           user_docs: ${{ inputs.user_docs }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
+          test: ${{ inputs.test }}
 
       - name: Post to Slack
         uses: fjogeleit/http-request-action@master

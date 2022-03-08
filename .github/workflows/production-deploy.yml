@@ -13,6 +13,11 @@ on:
         required: false
         default: true
         type: boolean
+      test:
+        description: "Test deployed stack"
+        required: false
+        default: "true"
+        type: string
     secrets:
       PROD_AWS_ACCESS_KEY_ID:
         required: true
@@ -36,3 +41,4 @@ jobs:
           user_docs: ${{ inputs.user_docs }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           deploy_flag: "--prod"
+          test: ${{ inputs.test }}

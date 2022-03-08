@@ -12,6 +12,10 @@ inputs:
       description: "Flag to pass to ./run cdk deploy"
       default: ""
       required: false
+    test:
+      description: "Test deployed stack"
+      default: "true"
+      required: false
 runs:
   using: "composite"
   steps:
@@ -41,5 +45,6 @@ runs:
       run: ./run cdk deploy ${{ inputs.deploy_flag }}
 
     - name: Test Deployed Stack
+      if: ${{ inputs.test }} == "true"
       shell: bash
       run: ./run test deployed
