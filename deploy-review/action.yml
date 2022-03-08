@@ -8,6 +8,10 @@ inputs:
       description: "Test deployed stack"
       default: "true"
       required: false
+    user_docs:
+      description: "create user docs"
+      required: false
+      default: "true"
 runs:
   using: "composite"
   steps:
@@ -32,6 +36,7 @@ runs:
         GITHUB_TOKEN: ${{ inputs.repo_token }}
 
     - name: Build docs for deploy
+      if: ${{ inputs.user_docs }} == "true"
       shell: bash
       run: |
         ./run docs build-user-docs
