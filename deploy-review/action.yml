@@ -4,6 +4,10 @@ inputs:
     repo_token:
       description: "Github Token"
       required: true
+    test:
+      description: "Test deployed stack"
+      default: "true"
+      required: false
 runs:
   using: "composite"
   steps:
@@ -37,6 +41,7 @@ runs:
       run: ./run cdk --review ${{ github.event.number }} deploy
 
     - name: Test Deployed Stack
+      if: ${{ inputs.test }} == "true"
       shell: bash
       run: ./run test --review ${{ github.event.number }} deployed
 
