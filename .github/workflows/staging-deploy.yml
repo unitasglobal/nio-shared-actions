@@ -48,6 +48,8 @@ jobs:
           user_docs: ${{ inputs.user_docs }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           test: ${{ inputs.test }}
+          env_name: staging
+          env_url: ${{ inputs.environment_url }}
 
       - name: Post to Slack
         uses: fjogeleit/http-request-action@master
