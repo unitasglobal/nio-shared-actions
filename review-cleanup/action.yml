@@ -14,9 +14,9 @@ runs:
         install_node: true
 
     - name: Deactivate Review Environment
-      uses: bobheadxi/deployments@v0.4.3
+      uses: bobheadxi/deployments@v1.1.0
       with:
-        step: deactivate-env
+        step: delete-env
         token: ${{ inputs.repo_token }}
         env: review-${{ github.event.number }}
         desc: Environment Pruned

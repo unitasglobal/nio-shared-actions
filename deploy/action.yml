@@ -16,9 +16,25 @@ inputs:
       description: "Test deployed stack"
       default: "true"
       required: false
+    env_name:
+      description: "The name of the deploy environment"
+      required: true
+    env_url:
+      description: "The name of the deploy environment"
+      required: true
 runs:
   using: "composite"
   steps:
+    - name: Create Review Environment
+      uses: bobheadxi/deployments@v1.1.0
+      id: deployment
+      with:
+        step: start
+        token: ${{ inputs.repo_token }}
+        env: ${{ inputs.env_name }}
+        ref: ${{ github.head_ref }}
+        desc: ${{ input.env_name }} environment
+
     - uses: actions/checkout@v2
 
     - uses: unitasglobal/nio-shared-actions/python-setup@main
@@ -44,3 +60,15 @@ runs:
       if: ${{ inputs.test == 'true' }}
       shell: bash
       run: ./run test deployed
+
+    - name: Update Environment Status
+      uses: bobheadxi/deployments@v0.5.2
+      if: always()
+      with:
+        step: finish
+        token: ${{ inputs.repo_token }}
+        status: ${{ job.status }}
+        env: ${{ steps.deployment.outputs.env }}
+        deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+        env_url: ${{ inputs.env_url }}
+
