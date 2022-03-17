@@ -33,7 +33,7 @@ runs:
         token: ${{ inputs.repo_token }}
         env: ${{ inputs.env_name }}
         ref: ${{ github.head_ref }}
-        desc: ${{ input.env_name }} environment
+        desc: ${{ inputs.env_name }} environment
 
     - uses: actions/checkout@v2
 
