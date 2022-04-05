@@ -1,17 +1,17 @@
 name: deploy-review
-description: 'Deploy a review environment'
+description: "Deploy a review environment"
 inputs:
-    repo_token:
-      description: "Github Token"
-      required: true
-    test:
-      description: "Test deployed stack"
-      default: "true"
-      required: false
-    user_docs:
-      description: "create user docs"
-      required: false
-      default: "true"
+  repo_token:
+    description: "Github Token"
+    required: true
+  test:
+    description: "Test deployed stack"
+    default: "true"
+    required: false
+  user_docs:
+    description: "create user docs"
+    required: false
+    default: "true"
 runs:
   using: "composite"
   steps:
@@ -40,6 +40,10 @@ runs:
       run: |
         ./run docs build-user-docs
 
+    - name: Synthesize Default Stacks
+      shell: bash
+      run: ./run cdk synth
+
     - name: Deploy Review Stack
       shell: bash
       run: ./run cdk --review ${{ github.event.number }} deploy
@@ -63,4 +67,3 @@ runs:
         env: ${{ steps.deployment.outputs.env }}
         deployment_id: ${{ steps.deployment.outputs.deployment_id }}
         env_url: ${{ env.BASE_URL }}
-
