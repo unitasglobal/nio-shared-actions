@@ -1,9 +1,9 @@
 name: review-cleanup
-description: 'Clean up after a review closes'
+description: "Clean up after a review closes"
 inputs:
-    repo_token:
-      description: "Github Token"
-      required: true
+  repo_token:
+    description: "Github Token"
+    required: true
 runs:
   using: "composite"
   steps:

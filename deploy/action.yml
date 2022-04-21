@@ -1,27 +1,27 @@
 name: deploy
-description: 'Deploy the app to production'
+description: "Deploy the app to production"
 inputs:
-    user_docs:
-      description: "create user docs"
-      required: false
-      default: "true"
-    repo_token:
-      description: "Github Token"
-      required: true
-    deploy_flag:
-      description: "Flag to pass to ./run cdk deploy"
-      default: ""
-      required: false
-    test:
-      description: "Test deployed stack"
-      default: "true"
-      required: false
-    env_name:
-      description: "The name of the deploy environment"
-      required: true
-    env_url:
-      description: "The name of the deploy environment"
-      required: true
+  user_docs:
+    description: "create user docs"
+    required: false
+    default: "true"
+  repo_token:
+    description: "Github Token"
+    required: true
+  deploy_flag:
+    description: "Flag to pass to ./run cdk deploy"
+    default: ""
+    required: false
+  test:
+    description: "Test deployed stack"
+    default: "true"
+    required: false
+  env_name:
+    description: "The name of the deploy environment"
+    required: true
+  env_url:
+    description: "The name of the deploy environment"
+    required: true
 runs:
   using: "composite"
   steps:
@@ -71,4 +71,3 @@ runs:
         env: ${{ steps.deployment.outputs.env }}
         deployment_id: ${{ steps.deployment.outputs.deployment_id }}
         env_url: ${{ inputs.env_url }}
-

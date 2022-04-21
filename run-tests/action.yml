@@ -1,8 +1,8 @@
 name: run-tests
-description: 'Run pytest tests for a given repo'
+description: "Run pytest tests for a given repo"
 inputs:
   codecov-token:
-    description: 'The token used to upload to CodeCov'
+    description: "The token used to upload to CodeCov"
     required: true
 runs:
   using: "composite"

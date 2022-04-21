@@ -1,5 +1,5 @@
 name: db-branch-check
-description: 'Test for branched heads in the database'
+description: "Test for branched heads in the database"
 runs:
   using: "composite"
   steps:

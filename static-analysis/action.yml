@@ -1,5 +1,5 @@
 name: static-analysis
-description: 'Run self check'
+description: "Run self check"
 runs:
   using: "composite"
   steps:
