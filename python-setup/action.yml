@@ -5,10 +5,17 @@ inputs:
     description: "Install node"
     required: false
     default: "false"
+  fetch_depth:
+    description: "Number of commits to fetch. 0 indicates all history for all branches and tags."
+    type: number
+    required: false
+    default: "1"
 runs:
   using: "composite"
   steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: ${{ github.event.inputs.fetch_depth }}
 
     - name: use Node.js
       uses: actions/setup-node@v2
