@@ -1,0 +1,20 @@
+name: deploy-library
+description: "Deploy a library"
+runs:
+  using: "composite"
+  steps:
+    - uses: unitasglobal/nio-shared-actions/python-setup@main
+
+    - name: Publish Library
+      run: poetry run check-version && poetry publish --build -r nio
+
+    - name: Get library name and version
+      shell: bash
+      run: echo "LIBRARY_INFO=\"$(poetry version)\"" >> $GITHUB_ENV
+
+    - name: Post to Slack
+      uses: fjogeleit/http-request-action@master
+      with:
+        url: ${{ secrets.SLACK_WEBHOOK_URL }}
+        method: "POST"
+        data: '{"blocks":[{"type":"section","text":{"type":"mrkdwn","text":"${{ env.LIBRARY_INFO }} has deployed to NIO PyPI"}}]}'
