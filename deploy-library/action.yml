@@ -3,8 +3,6 @@ description: "Deploy a library"
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v2
-
     - uses: unitasglobal/nio-shared-actions/python-setup@main
 
     - name: Publish Library
