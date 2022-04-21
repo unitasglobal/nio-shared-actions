@@ -3,12 +3,23 @@ description: "Run self check"
 inputs:
   version_check:
     description: "Check for library version increment"
+    type: boolean
     required: false
     default: "false"
 runs:
   using: "composite"
   steps:
+    - name: Set checkout depth
+      shell: bash
+      id: checkout-depth
+      run: |
+        fetch_depth=1
+        if [[ ${{ inputs.version_check }} == 'true' ]]; then fetch_depth=0; fi
+        echo "::set-output name=fetch_depth::$fetch_depth"
+
     - uses: unitasglobal/nio-shared-actions/python-setup@main
+      with:
+        fetch_depth: ${{ steps.checkout-depth.outputs.fetch_depth }}
 
     - name: Cache Pre-Commit data
       uses: actions/cache@v2
