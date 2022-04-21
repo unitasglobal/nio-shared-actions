@@ -15,11 +15,11 @@ runs:
   steps:
     - uses: actions/checkout@v2
       with:
-        fetch-depth: ${{ github.event.inputs.fetch_depth }}
+        fetch-depth: ${{ inputs.fetch_depth }}
 
     - name: use Node.js
       uses: actions/setup-node@v2
-      if: ${{ github.event.inputs.install_node == 'true' }}
+      if: ${{ inputs.install_node == 'true' }}
       with:
         node-version: "14"
 
