@@ -49,8 +49,7 @@ runs:
     - name: Build user docs for deploy
       if: ${{ inputs.user_docs == 'true' }}
       shell: bash
-      run: |
-        ./run docs build-user-docs
+      run: ./run docs build-user-docs
 
     - name: Deploy
       shell: bash

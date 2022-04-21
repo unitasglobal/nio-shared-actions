@@ -37,8 +37,7 @@ runs:
     - name: Build docs for deploy
       if: ${{ inputs.user_docs == 'true' }}
       shell: bash
-      run: |
-        ./run docs build-user-docs
+      run: ./run docs build-user-docs
 
     - name: Synthesize Default Stacks
       shell: bash
