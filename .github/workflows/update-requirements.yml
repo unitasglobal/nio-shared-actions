@@ -16,8 +16,6 @@ jobs:
     name: Build Requirements ECR Image
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-
       - uses: unitasglobal/nio-shared-actions/python-setup@main
 
       - name: Build and Push Images

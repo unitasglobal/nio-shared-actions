@@ -41,8 +41,6 @@ jobs:
       name: staging
       url: ${{ inputs.environment_url }}
     steps:
-      - uses: actions/checkout@v2
-
       - uses: unitasglobal/nio-shared-actions/deploy@main
         with:
           user_docs: ${{ inputs.user_docs }}
