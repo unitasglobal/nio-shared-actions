@@ -1,5 +1,10 @@
 name: static-analysis
 description: "Run self check"
+inputs:
+  version_check:
+    description: "Check for library version increment"
+    required: false
+    default: "false"
 runs:
   using: "composite"
   steps:
@@ -7,6 +12,18 @@ runs:
 
     - uses: unitasglobal/nio-shared-actions/python-setup@main
 
+    - name: Cache Pre-Commit data
+      uses: actions/cache@v2
+      with:
+        path: ~/.cache/pre-commit
+        key: pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
+        restore-keys: pre-commit-
+
     - name: Run Self Check
       shell: bash
       run: ./run test self-check
+
+    - name: Run Version Check
+      if: ${{ inputs.version_check == 'true' }}
+      shell: bash
+      run: poetry run check-version
