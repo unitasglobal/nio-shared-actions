@@ -7,6 +7,6 @@ runs:
 
     - uses: unitasglobal/nio-shared-actions/python-setup@main
 
-    - name: Check for Alembic Branches
+    - name: Run Self Check
       shell: bash
       run: ./run test self-check
