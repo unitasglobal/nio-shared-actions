@@ -25,8 +25,6 @@ runs:
         ref: ${{ github.head_ref }}
         desc: Review Environment for PR ${{ github.event.number }}
 
-    - uses: actions/checkout@v2
-
     - uses: unitasglobal/nio-shared-actions/python-setup@main
 
     - name: Ensure Only One Deploy Run

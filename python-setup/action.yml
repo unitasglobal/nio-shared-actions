@@ -8,6 +8,8 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - uses: actions/checkout@v2
+
     - name: use Node.js
       uses: actions/setup-node@v2
       if: ${{ github.event.inputs.install_node == 'true' }}

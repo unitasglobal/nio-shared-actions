@@ -3,8 +3,6 @@ description: "Test for branched heads in the database"
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v2
-
     - uses: unitasglobal/nio-shared-actions/python-setup@main
 
     - name: Check for Alembic Branches

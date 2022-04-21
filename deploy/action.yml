@@ -35,8 +35,6 @@ runs:
         ref: ${{ github.head_ref }}
         desc: ${{ inputs.env_name }} environment
 
-    - uses: actions/checkout@v2
-
     - uses: unitasglobal/nio-shared-actions/python-setup@main
       with:
         install_node: true
