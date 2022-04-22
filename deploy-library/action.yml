@@ -1,11 +1,16 @@
 name: deploy-library
 description: "Deploy a library"
+inputs:
+  slack-webhook-url:
+    description: "The slack webhook URL to report deployment."
+    required: true
 runs:
   using: "composite"
   steps:
     - uses: unitasglobal/nio-shared-actions/python-setup@main
 
     - name: Publish Library
+      shell: bash
       run: poetry run check-version && poetry publish --build -r nio
 
     - name: Get library name and version
@@ -15,6 +20,6 @@ runs:
     - name: Post to Slack
       uses: fjogeleit/http-request-action@master
       with:
-        url: ${{ secrets.SLACK_WEBHOOK_URL }}
+        url: ${{ inputs.slack-webhook-url }}
         method: "POST"
         data: '{"blocks":[{"type":"section","text":{"type":"mrkdwn","text":"${{ env.LIBRARY_INFO }} has deployed to NIO PyPI"}}]}'
