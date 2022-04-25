@@ -45,12 +45,12 @@ jobs:
               - 'scripts/**'
               - 'docs/**'
             revisions:
-              - 'src/db/versions/**'
+              - '**/db/versions/**'
             ci-files:
-              - 'Dockerfile'
-              - 'Dockerfile.requirements'
               - 'bootstrap.sh'
               - 'docker-compose.yml'
+              - 'docker-compose.test.yml'
+              - 'run'
               - '.github/workflows/pull-requests.yml'
 
   db-branch-check:
@@ -71,7 +71,7 @@ jobs:
 
   test:
     name: Run Tests
-    needs: changes
+    needs: [changes, static-analysis]
     if: ${{ needs.changes.outputs.tests == 'true' || needs.changes.outputs.src == 'true' || needs.changes.outputs.ci-files == 'true' }}
     runs-on: ubuntu-latest
     steps:
