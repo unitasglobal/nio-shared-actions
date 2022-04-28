@@ -11,7 +11,7 @@ runs:
 
     - name: Publish Library
       shell: bash
-      run: poetry run check-version && poetry publish --build -r nio
+      run: ./run test pypi-has-version && poetry publish --build -r nio || true
 
     - name: Get library name and version
       shell: bash
