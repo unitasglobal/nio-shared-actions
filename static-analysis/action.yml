@@ -2,7 +2,7 @@ name: static-analysis
 description: "Run self check"
 inputs:
   python_version:
-    description: "The python version to use, in the format {major}.{minor}"
+    description: "The python version to use, in the format '{major}.{minor}'"
     default: "3.9"
     required: false
   version_check:
