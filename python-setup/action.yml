@@ -28,8 +28,7 @@ runs:
         node-version: "14"
 
     - name: Install zip
-      shell: bash
-      run: apt-get update && apt-get install -y zip unzip
+      uses: montudor/action-zip@v1
 
     - name: Setup Python
       uses: actions/setup-python@v2
