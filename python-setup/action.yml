@@ -28,6 +28,7 @@ runs:
         node-version: "14"
 
     - name: Install zip
+      if: runner.os == 'Linux'
       uses: montudor/action-zip@v1
 
     - name: Setup Python
