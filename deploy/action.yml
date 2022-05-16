@@ -2,7 +2,7 @@ name: deploy
 description: "Deploy the app to production"
 inputs:
   user_docs:
-    description: "create user docs"
+    description: "Create user docs"
     required: false
     default: "true"
   repo_token:
@@ -20,7 +20,7 @@ inputs:
     description: "The name of the deploy environment"
     required: true
   env_url:
-    description: "The name of the deploy environment"
+    description: "The URL of the deploy environment"
     required: true
 runs:
   using: "composite"
