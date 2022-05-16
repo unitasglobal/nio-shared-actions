@@ -28,6 +28,7 @@ runs:
   using: "composite"
   steps:
     - name: Create Review Environment
+      if: ${{ inputs.env_url != '' }}
       uses: bobheadxi/deployments@v1.1.0
       id: deployment
       with:
@@ -62,7 +63,7 @@ runs:
 
     - name: Update Environment Status
       uses: bobheadxi/deployments@v1.1.0
-      if: always()
+      if: ${{ inputs.env_url != '' && always() }}
       with:
         step: finish
         token: ${{ inputs.repo_token }}
