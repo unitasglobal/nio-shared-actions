@@ -18,9 +18,9 @@ on:
         default: true
       test:
         description: "Test deployed stack"
-        type: string
+        type: boolean
         required: false
-        default: "true"
+        default: true
       environment_url:
         description: "The URL of the deploy environment"
         type: string
