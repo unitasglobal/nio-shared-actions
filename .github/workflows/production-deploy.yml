@@ -18,8 +18,8 @@ on:
       test:
         description: "Test deployed stack"
         required: false
-        default: "true"
-        type: string
+        default: true
+        type: boolean
     secrets:
       PROD_AWS_ACCESS_KEY_ID:
         required: true
