@@ -10,12 +10,12 @@ inputs:
     required: true
   deploy_flag:
     description: "Flag to pass to ./run cdk deploy"
-    default: ""
     required: false
+    default: ""
   test:
     description: "Test deployed stack"
-    default: "true"
     required: false
+    default: "true"
   env_name:
     description: "The name of the deploy environment"
     required: false
