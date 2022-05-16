@@ -6,10 +6,12 @@ on:
         type: string
         required: true
       db_port:
+        description: "Docker Postgres port"
         required: false
         type: number
         default: 5432
       user_docs:
+        description: "Create user docs"
         required: false
         default: true
         type: boolean
