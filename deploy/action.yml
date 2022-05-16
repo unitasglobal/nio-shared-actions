@@ -1,10 +1,6 @@
 name: deploy
 description: "Deploy the app to production"
 inputs:
-  user_docs:
-    description: "Create user docs"
-    required: false
-    default: "true"
   repo_token:
     description: "Github Token"
     required: true
@@ -12,6 +8,10 @@ inputs:
     description: "Flag to pass to ./run cdk deploy"
     required: false
     default: ""
+  user_docs:
+    description: "Create user docs"
+    required: false
+    default: "true"
   test:
     description: "Test deployed stack"
     required: false
