@@ -3,8 +3,9 @@ on:
   workflow_call:
     inputs:
       db_port:
-        required: false
+        description: "Docker Postgres port"
         type: number
+        required: false
         default: 5432
     secrets:
       AWS_ACCESS_KEY_ID:
