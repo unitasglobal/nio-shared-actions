@@ -7,19 +7,19 @@ on:
         required: true
       db_port:
         description: "Docker Postgres port"
-        required: false
         type: number
+        required: false
         default: 5432
       user_docs:
         description: "Create user docs"
+        type: boolean
         required: false
         default: true
-        type: boolean
       test:
         description: "Test deployed stack"
+        type: boolean
         required: false
         default: true
-        type: boolean
     secrets:
       PROD_AWS_ACCESS_KEY_ID:
         required: true
