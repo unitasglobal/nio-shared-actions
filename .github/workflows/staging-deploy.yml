@@ -48,8 +48,8 @@ jobs:
     steps:
       - uses: unitasglobal/nio-shared-actions/deploy@main
         with:
-          user_docs: ${{ inputs.user_docs }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
+          user_docs: ${{ inputs.user_docs }}
           test: ${{ inputs.test }}
           env_name: staging
           env_url: ${{ inputs.environment_url }}
