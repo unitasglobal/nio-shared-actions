@@ -3,24 +3,28 @@ on:
   workflow_call:
     inputs:
       environment_url:
+        description: "The URL of the deploy environment"
         type: string
         required: true
       project_name:
-        required: true
+        description: "Project name"
         type: string
+        required: true
       db_port:
-        required: false
+        description: "Docker Postgres port"
         type: number
+        required: false
         default: 5432
       user_docs:
+        description: "Create user docs"
+        type: boolean
         required: false
         default: true
-        type: boolean
       test:
         description: "Test deployed stack"
+        type: string
         required: false
         default: "true"
-        type: string
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
