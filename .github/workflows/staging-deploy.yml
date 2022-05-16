@@ -2,10 +2,6 @@ name: staging-deploy
 on:
   workflow_call:
     inputs:
-      environment_url:
-        description: "The URL of the deploy environment"
-        type: string
-        required: true
       project_name:
         description: "Project name"
         type: string
@@ -25,6 +21,11 @@ on:
         type: string
         required: false
         default: "true"
+      environment_url:
+        description: "The URL of the deploy environment"
+        type: string
+        required: false
+        default: ""
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
