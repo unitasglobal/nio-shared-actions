@@ -4,14 +4,14 @@ inputs:
   repo_token:
     description: "Github Token"
     required: true
+  user_docs:
+    description: "Create user docs"
+    required: false
+    default: "true"
   test:
     description: "Test deployed stack"
     default: "true"
     required: false
-  user_docs:
-    description: "create user docs"
-    required: false
-    default: "true"
 runs:
   using: "composite"
   steps:
