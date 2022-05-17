@@ -10,12 +10,12 @@ on:
         description: "Test deployed stack"
         type: boolean
         required: false
-        default: "true"
+        default: true
       user_docs:
         description: "create user docs"
         type: boolean
         required: false
-        default: "true"
+        default: true
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
