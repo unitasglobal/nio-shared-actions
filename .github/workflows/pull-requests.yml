@@ -7,8 +7,8 @@ on:
         type: number
         required: false
         default: 5432
-      use_deployments:
-        description: "Use GitHub Deployments for URL"
+      user_docs:
+        description: "Create user docs"
         type: boolean
         required: false
         default: true
@@ -17,8 +17,8 @@ on:
         type: boolean
         required: false
         default: true
-      user_docs:
-        description: "Create user docs"
+      use_deployments:
+        description: "Use GitHub Deployments for URL"
         type: boolean
         required: false
         default: true
