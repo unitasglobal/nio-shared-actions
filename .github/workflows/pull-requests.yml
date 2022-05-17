@@ -7,6 +7,11 @@ on:
         type: number
         required: false
         default: 5432
+      use_deployments:
+        description: "Use GitHub Deployments for URL"
+        type: boolean
+        required: false
+        default: true
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -89,3 +94,4 @@ jobs:
       - uses: unitasglobal/nio-shared-actions/deploy-review@main
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
+          use_deployments: ${{ inputs.use_deployments }}
