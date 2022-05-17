@@ -8,10 +8,6 @@ inputs:
     description: "Update IAM Permissions"
     required: false
     default: "false"
-  test:
-    description: "Test deployed stack"
-    required: false
-    default: "true"
   use_deployments:
     description: "Use GitHub Deployments for URL"
     required: false
@@ -24,6 +20,12 @@ runs:
       uses: andstor/file-existence-action@v1
       with:
         files: "docs/*"
+
+    - name: Check for Deploy Tests
+      id: check_deploy_tests
+      uses: andstor/file-existence-action@v1
+      with:
+        files: "tests/deploy_tests/*"
 
     - name: Create Review Environment
       if: ${{ inputs.use_deployments == 'true' }}
@@ -62,7 +64,7 @@ runs:
       run: ./run cdk --review ${{ github.event.number }} deploy
 
     - name: Test Deployed Stack
-      if: ${{ inputs.test == 'true' }}
+      if: ${{ steps.check_deploy_tests.files_exists == 'true' }}
       shell: bash
       run: ./run test --review ${{ github.event.number }} deployed
 

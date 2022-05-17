@@ -12,11 +12,6 @@ on:
         type: boolean
         required: false
         default: false
-      test_deployed:
-        description: "Test deployed stack"
-        type: boolean
-        required: false
-        default: true
       use_deployments:
         description: "Use GitHub Deployments for URL"
         type: boolean
@@ -110,6 +105,5 @@ jobs:
       - uses: unitasglobal/nio-shared-actions/deploy-review@main
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          test: ${{ inputs.test_deployed }}
           update_iam: ${{ inputs.update_iam }}
           use_deployments: ${{ inputs.use_deployments }}

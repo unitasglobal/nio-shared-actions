@@ -11,11 +11,6 @@ on:
         type: number
         required: false
         default: 5432
-      test:
-        description: "Test deployed stack"
-        type: boolean
-        required: false
-        default: true
       environment_url:
         description: "The URL of the deploy environment"
         type: string
@@ -44,7 +39,6 @@ jobs:
       - uses: unitasglobal/nio-shared-actions/deploy@main
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          test: ${{ inputs.test }}
           env_name: staging
           env_url: ${{ inputs.environment_url }}
 

@@ -12,11 +12,6 @@ on:
         type: boolean
         required: false
         default: false
-      test:
-        description: "Test deployed stack"
-        type: boolean
-        required: false
-        default: true
       environment_url:
         description: "The URL of the deploy environment"
         type: string
@@ -44,6 +39,5 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           deploy_flag: "--prod"
           update_iam: ${{ inputs.update_iam }}
-          test: ${{ inputs.test }}
           env_name: production
           env_url: ${{ inputs.environment_url }}
