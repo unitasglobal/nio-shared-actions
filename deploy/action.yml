@@ -1,31 +1,42 @@
 name: deploy
 description: "Deploy the app to production"
 inputs:
-  user_docs:
-    description: "create user docs"
-    required: false
-    default: "true"
   repo_token:
     description: "Github Token"
     required: true
   deploy_flag:
     description: "Flag to pass to ./run cdk deploy"
+    required: false
     default: ""
+  update_iam:
+    description: "Update IAM Permissions"
     required: false
-  test:
-    description: "Test deployed stack"
-    default: "true"
-    required: false
+    default: "false"
   env_name:
     description: "The name of the deploy environment"
-    required: true
+    required: false
+    default: ""
   env_url:
-    description: "The name of the deploy environment"
-    required: true
+    description: "The URL of the deploy environment"
+    required: false
+    default: ""
 runs:
   using: "composite"
   steps:
+    - name: Check for Docs
+      id: check_docs
+      uses: andstor/file-existence-action@v1
+      with:
+        files: "docs/*"
+
+    - name: Check for Deploy Tests
+      id: check_deploy_tests
+      uses: andstor/file-existence-action@v1
+      with:
+        files: "tests/deploy_tests/*"
+
     - name: Create Review Environment
+      if: ${{ inputs.env_url != '' }}
       uses: bobheadxi/deployments@v1.1.0
       id: deployment
       with:
@@ -45,22 +56,27 @@ runs:
         GITHUB_TOKEN: ${{ inputs.repo_token }}
 
     - name: Build user docs for deploy
-      if: ${{ inputs.user_docs == 'true' }}
+      if: ${{ steps.check_docs.outputs.files_exists == 'true' }}
       shell: bash
       run: ./run docs build-user-docs
+
+    - name: Update IAM Permissions
+      if: ${{ inputs.update_iam == 'true' }}
+      shell: bash
+      run: ./run data iam-resources
 
     - name: Deploy
       shell: bash
       run: ./run cdk deploy ${{ inputs.deploy_flag }}
 
     - name: Test Deployed Stack
-      if: ${{ inputs.test == 'true' }}
+      if: ${{ steps.check_deploy_tests.files_exists == 'true' }}
       shell: bash
       run: ./run test deployed
 
     - name: Update Environment Status
       uses: bobheadxi/deployments@v1.1.0
-      if: always()
+      if: ${{ inputs.env_url != '' && always() }}
       with:
         step: finish
         token: ${{ inputs.repo_token }}

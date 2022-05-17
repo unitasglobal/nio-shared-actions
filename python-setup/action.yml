@@ -21,6 +21,9 @@ runs:
       with:
         fetch-depth: ${{ inputs.fetch_depth }}
 
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+
     - name: use Node.js
       uses: actions/setup-node@v2
       if: ${{ inputs.install_node == 'true' }}

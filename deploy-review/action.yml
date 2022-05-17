@@ -4,18 +4,31 @@ inputs:
   repo_token:
     description: "Github Token"
     required: true
-  test:
-    description: "Test deployed stack"
-    default: "true"
+  update_iam:
+    description: "Update IAM Permissions"
     required: false
-  user_docs:
-    description: "create user docs"
+    default: "false"
+  use_deployments:
+    description: "Use GitHub Deployments for URL"
     required: false
     default: "true"
 runs:
   using: "composite"
   steps:
+    - name: Check for Docs
+      id: check_docs
+      uses: andstor/file-existence-action@v1
+      with:
+        files: "docs/*"
+
+    - name: Check for Deploy Tests
+      id: check_deploy_tests
+      uses: andstor/file-existence-action@v1
+      with:
+        files: "tests/deploy_tests/*"
+
     - name: Create Review Environment
+      if: ${{ inputs.use_deployments == 'true' }}
       uses: bobheadxi/deployments@v1.1.0
       id: deployment
       with:
@@ -33,7 +46,7 @@ runs:
         GITHUB_TOKEN: ${{ inputs.repo_token }}
 
     - name: Build docs for deploy
-      if: ${{ inputs.user_docs == 'true' }}
+      if: ${{ steps.check_docs.outputs.files_exists == 'true' }}
       shell: bash
       run: ./run docs build-user-docs
 
@@ -41,22 +54,28 @@ runs:
       shell: bash
       run: ./run cdk synth
 
+    - name: Update IAM Permissions
+      if: ${{ inputs.update_iam == 'true' }}
+      shell: bash
+      run: ./run data iam-resources
+
     - name: Deploy Review Stack
       shell: bash
       run: ./run cdk --review ${{ github.event.number }} deploy
 
     - name: Test Deployed Stack
-      if: ${{ inputs.test == 'true' }}
+      if: ${{ steps.check_deploy_tests.files_exists == 'true' }}
       shell: bash
       run: ./run test --review ${{ github.event.number }} deployed
 
     - name: Update Environment URL
+      if: ${{ inputs.use_deployments == 'true' }}
       shell: bash
       run: ./run cdk --review ${{ github.event.number }} display --pipeline-key=BASE_URL >> $GITHUB_ENV
 
     - name: Update Environment Status
       uses: bobheadxi/deployments@v1.1.0
-      if: always()
+      if: ${{ inputs.use_deployments != 'true' && always() }}
       with:
         step: finish
         token: ${{ inputs.repo_token }}
