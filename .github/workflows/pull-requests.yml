@@ -50,6 +50,7 @@ jobs:
       stack-files: ${{ steps.filter.outputs.stack-files }}
       revisions: ${{ steps.filter.outputs.revisions }}
       ci-files: ${{ steps.filter.outputs.ci-files }}
+      has_tests: ${{ steps.check_files.outputs.files_exists }}
     steps:
       - uses: dorny/paths-filter@v2
         id: filter
@@ -74,6 +75,11 @@ jobs:
               - 'run'
               - '.github/workflows/pull-requests.yml'
 
+      - uses: andstor/file-existence-action@v1
+        id: check_files
+        with:
+          files: "tests/conftest.py"
+
   db-branch-check:
     name: Check for Alembic Branches
     needs: changes
@@ -93,7 +99,7 @@ jobs:
   test:
     name: Run Tests
     needs: [changes, static-analysis]
-    if: ${{ needs.changes.outputs.tests == 'true' || needs.changes.outputs.src == 'true' || needs.changes.outputs.ci-files == 'true' }}
+    if: ${{ needs.changes.outputs.has_tests == 'true' && (needs.changes.outputs.tests == 'true' || needs.changes.outputs.src == 'true' || needs.changes.outputs.ci-files == 'true') }}
     runs-on: ubuntu-latest
     steps:
       - uses: unitasglobal/nio-shared-actions/run-tests@main
