@@ -7,7 +7,6 @@ inputs:
     required: false
   version_check:
     description: "Check for library version increment"
-    type: boolean
     required: false
     default: "false"
 runs:
