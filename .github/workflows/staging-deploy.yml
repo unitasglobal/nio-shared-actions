@@ -11,11 +11,6 @@ on:
         type: number
         required: false
         default: 5432
-      user_docs:
-        description: "Create user docs"
-        type: boolean
-        required: false
-        default: true
       test:
         description: "Test deployed stack"
         type: boolean
@@ -49,7 +44,6 @@ jobs:
       - uses: unitasglobal/nio-shared-actions/deploy@main
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          user_docs: ${{ inputs.user_docs }}
           test: ${{ inputs.test }}
           env_name: staging
           env_url: ${{ inputs.environment_url }}

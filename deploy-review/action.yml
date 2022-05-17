@@ -4,10 +4,6 @@ inputs:
   repo_token:
     description: "Github Token"
     required: true
-  user_docs:
-    description: "Create user docs"
-    required: false
-    default: "true"
   update_iam:
     description: "Update IAM Permissions"
     required: false
@@ -23,6 +19,12 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Check for Docs
+      id: check_docs
+      uses: andstor/file-existence-action@v1
+      with:
+        files: "docs/*"
+
     - name: Create Review Environment
       if: ${{ inputs.use_deployments == 'true' }}
       uses: bobheadxi/deployments@v1.1.0
@@ -42,7 +44,7 @@ runs:
         GITHUB_TOKEN: ${{ inputs.repo_token }}
 
     - name: Build docs for deploy
-      if: ${{ inputs.user_docs == 'true' }}
+      if: ${{ steps.check_docs.outputs.files_exists == 'true' }}
       shell: bash
       run: ./run docs build-user-docs
 
