@@ -8,6 +8,10 @@ inputs:
     description: "Create user docs"
     required: false
     default: "true"
+  update_iam:
+    description: "Update IAM Permissions"
+    required: false
+    default: "false"
   test:
     description: "Test deployed stack"
     required: false
@@ -45,6 +49,11 @@ runs:
     - name: Synthesize Default Stacks
       shell: bash
       run: ./run cdk synth
+
+    - name: Update IAM Permissions
+      if: ${{ inputs.update_iam == 'true' }}
+      shell: bash
+      run: ./run data iam-resources
 
     - name: Deploy Review Stack
       shell: bash

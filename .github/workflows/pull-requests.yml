@@ -12,6 +12,11 @@ on:
         type: boolean
         required: false
         default: true
+      update_iam:
+        description: "Update IAM Permissions"
+        type: boolean
+        required: false
+        default: false
       test_deployed:
         description: "Test deployed stack"
         type: boolean
@@ -106,4 +111,5 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           test: ${{ inputs.test_deployed }}
           user_docs: ${{ inputs.user_docs }}
+          update_iam: ${{ inputs.update_iam }}
           use_deployments: ${{ inputs.use_deployments }}
