@@ -12,10 +12,15 @@ inputs:
     description: "Test deployed stack"
     required: false
     default: "true"
+  use_deployments:
+    description: "Use GitHub Deployments for URL"
+    required: false
+    default: "true"
 runs:
   using: "composite"
   steps:
     - name: Create Review Environment
+      if: ${{ inputs.use_deployments == 'true' }}
       uses: bobheadxi/deployments@v1.1.0
       id: deployment
       with:
@@ -51,12 +56,13 @@ runs:
       run: ./run test --review ${{ github.event.number }} deployed
 
     - name: Update Environment URL
+      if: ${{ inputs.use_deployments == 'true' }}
       shell: bash
       run: ./run cdk --review ${{ github.event.number }} display --pipeline-key=BASE_URL >> $GITHUB_ENV
 
     - name: Update Environment Status
       uses: bobheadxi/deployments@v1.1.0
-      if: always()
+      if: ${{ inputs.use_deployments != 'true' && always() }}
       with:
         step: finish
         token: ${{ inputs.repo_token }}
