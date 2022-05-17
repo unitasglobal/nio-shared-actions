@@ -6,7 +6,7 @@ on:
         required: false
         type: number
         default: 5432
-      test:
+      test_deployed:
         description: "Test deployed stack"
         type: boolean
         required: false
@@ -98,5 +98,5 @@ jobs:
       - uses: unitasglobal/nio-shared-actions/deploy-review@main
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          test: ${{ inputs.test }}
+          test: ${{ inputs.test_deployed }}
           user_docs: ${{ inputs.user_docs }}
