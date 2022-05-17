@@ -10,8 +10,8 @@ inputs:
     default: "true"
   test:
     description: "Test deployed stack"
-    default: "true"
     required: false
+    default: "true"
 runs:
   using: "composite"
   steps:
