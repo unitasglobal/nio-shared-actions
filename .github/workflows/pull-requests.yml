@@ -6,6 +6,16 @@ on:
         required: false
         type: number
         default: 5432
+      test_deployed:
+        description: "Test deployed stack"
+        type: boolean
+        required: false
+        default: "true"
+      user_docs:
+        description: "create user docs"
+        type: boolean
+        required: false
+        default: "true"
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -88,3 +98,5 @@ jobs:
       - uses: unitasglobal/nio-shared-actions/deploy-review@main
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
+          test: ${{ inputs.test_deployed }}
+          user_docs: ${{ inputs.user_docs }}
