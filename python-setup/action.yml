@@ -21,6 +21,7 @@ runs:
         fetch-depth: ${{ inputs.fetch_depth }}
 
     - name: Set up QEMU
+      if: runner.os == "Linux"
       uses: docker/setup-qemu-action@v1
 
     - name: use Node.js
