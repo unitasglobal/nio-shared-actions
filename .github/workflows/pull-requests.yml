@@ -65,6 +65,8 @@ jobs:
               - 'run'
               - '.github/workflows/pull-requests.yml'
 
+      - uses: actions/checkout@v2
+
       - uses: andstor/file-existence-action@v1
         id: check_files
         with:
