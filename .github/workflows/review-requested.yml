@@ -13,8 +13,7 @@ jobs:
       - name: Build quote-safe title
         id: quote-safe-title
         run: |
-          title='${{ github.event.pull_request.title }}'
-          title="${title//\"/}"
+          title=$(echo ${{ github.event.pull_request.title }} | tr -d '[:punct:]')
           echo "::set-output name=pull-title::${title}"
       - name: Post to Slack - Requested Reviewer
         if: ${{ github.event.requested_reviewer }}
