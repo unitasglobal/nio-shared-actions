@@ -75,7 +75,7 @@ runs:
 
     - name: Update Environment Status
       uses: bobheadxi/deployments@v1.1.0
-      if: ${{ inputs.use_deployments != 'true' && always() }}
+      if: ${{ inputs.use_deployments == 'true' && always() }}
       with:
         step: finish
         token: ${{ inputs.repo_token }}
