@@ -48,3 +48,9 @@ jobs:
           url: ${{ secrets.SLACK_WEBHOOK_URL }}
           method: "POST"
           data: '{"blocks":[{"type":"section","text":{"type":"mrkdwn","text":"${{ inputs.project_name }} has released to Staging"}},{"type":"divider"},{"type":"section","text":{"type":"mrkdwn","text":"Start Production Build"},"accessory":{"type":"button","text":{"type":"plain_text","text":"Open GitHub","emoji":true},"url":"https://github.com/${{ github.repository }}/actions/workflows/production-deploy.yml","action_id":"button-action"}}]}'
+
+      - name: Manage Production Run
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: ./run pipeline manage-production-run
