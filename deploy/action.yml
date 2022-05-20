@@ -90,3 +90,10 @@ runs:
         env: ${{ steps.deployment.outputs.env }}
         deployment_id: ${{ steps.deployment.outputs.deployment_id }}
         env_url: ${{ inputs.env_url }}
+
+    - name: Post to Slack
+      uses: fjogeleit/http-request-action@master
+      with:
+        url: ${{ secrets.SLACK_WEBHOOK_URL }}
+        method: "POST"
+        data: '{"blocks":[{"type":"section","text":{"type":"mrkdwn","text":"${{ inputs.project_name }} has released to ${{ inputs.env_name }}"}}]}'
