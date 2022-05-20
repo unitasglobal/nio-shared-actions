@@ -42,6 +42,11 @@ jobs:
       ci-files: ${{ steps.filter.outputs.ci-files }}
       has_tests: ${{ steps.check_files.outputs.files_exists }}
     steps:
+      - id: project_src_name
+        run: |
+          export PROJECT_SRC=$(basename "$GITHUB_REPOSITORY" | sed 's/-/_/g')
+          echo "::set-output name=project_src::$PROJECT_SRC"
+
       - uses: dorny/paths-filter@v2
         id: filter
         with:
@@ -51,6 +56,7 @@ jobs:
             src:
               - 'poetry.lock'
               - 'src/**'
+              - '${{ steps.project_src_name.outputs.project_src }}/**'
             tests:
               - 'tests/**'
             stack-files:
