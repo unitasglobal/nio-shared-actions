@@ -25,7 +25,8 @@ runs:
       with:
         files: "tests/deploy_tests/*"
 
-    - shell: bash
+    - name: Get Environment URL
+      shell: bash
       run: ./run cdk display --pipeline-key BASE_URL >> $GITHUB_ENV
 
     - name: Create Review Environment
