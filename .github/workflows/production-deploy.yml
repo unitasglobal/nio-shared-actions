@@ -16,10 +16,6 @@ on:
         type: boolean
         required: false
         default: false
-      environment_url:
-        description: "The URL of the deploy environment"
-        type: string
-        required: false
     secrets:
       PROD_AWS_ACCESS_KEY_ID:
         required: true
@@ -34,9 +30,6 @@ env:
 jobs:
   deploy-production:
     runs-on: ubuntu-latest
-    environment:
-      name: production
-      url: ${{ inputs.environment_url }}
     steps:
       - uses: unitasglobal/nio-shared-actions/deploy@main
         with:
@@ -45,4 +38,3 @@ jobs:
           deploy_flag: "--prod"
           update_iam: ${{ inputs.update_iam }}
           env_name: production
-          env_url: ${{ inputs.environment_url }}

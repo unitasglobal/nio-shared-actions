@@ -12,11 +12,6 @@ on:
         type: boolean
         required: false
         default: false
-      use_deployments:
-        description: "Use GitHub Deployments for URL"
-        type: boolean
-        required: false
-        default: true
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -110,8 +105,11 @@ jobs:
     if: ${{ failure() != true && cancelled() != true && (needs.changes.outputs.src == 'true' || needs.changes.outputs.stack-files == 'true') }}
     runs-on: ubuntu-latest
     steps:
+      - shell: bash
+        run: ./run cdk display --pipeline-key BASE_URL >> $GITHUB_ENV
+
       - uses: unitasglobal/nio-shared-actions/deploy-review@main
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           update_iam: ${{ inputs.update_iam }}
-          use_deployments: ${{ inputs.use_deployments }}
+          use_deployments: ${{ env.BASE_URL != '' }}
