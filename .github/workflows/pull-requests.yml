@@ -105,6 +105,8 @@ jobs:
     if: ${{ failure() != true && cancelled() != true && (needs.changes.outputs.src == 'true' || needs.changes.outputs.stack-files == 'true') }}
     runs-on: ubuntu-latest
     steps:
+      - uses: unitasglobal/nio-shared-actions/python-setup@main
+
       - shell: bash
         run: ./run cdk display --pipeline-key BASE_URL >> $GITHUB_ENV
 
