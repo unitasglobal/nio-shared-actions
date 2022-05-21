@@ -8,13 +8,11 @@ inputs:
     description: "Update IAM Permissions"
     required: false
     default: "false"
-  use_deployments:
-    description: "Use GitHub Deployments for URL"
-    required: false
-    default: "true"
 runs:
   using: "composite"
   steps:
+    - uses: unitasglobal/nio-shared-actions/python-setup@main
+
     - name: Check for Docs
       id: check_docs
       uses: andstor/file-existence-action@v1
@@ -27,8 +25,11 @@ runs:
       with:
         files: "tests/deploy_tests/*"
 
+    - shell: bash
+      run: ./run cdk display --pipeline-key BASE_URL >> $GITHUB_ENV
+
     - name: Create Review Environment
-      if: ${{ inputs.use_deployments == 'true' }}
+      if: ${{ env.BASE_URL != '' }}
       uses: bobheadxi/deployments@v1.1.0
       id: deployment
       with:
@@ -37,8 +38,6 @@ runs:
         env: review-${{ github.event.number }}
         ref: ${{ github.head_ref }}
         desc: Review Environment for PR ${{ github.event.number }}
-
-    - uses: unitasglobal/nio-shared-actions/python-setup@main
 
     - name: Ensure Only One Deploy Run
       uses: softprops/turnstyle@v1
@@ -75,13 +74,13 @@ runs:
       run: ./run test --review ${{ github.event.number }} deployed
 
     - name: Update Environment URL
-      if: ${{ inputs.use_deployments == 'true' }}
+      if: ${{ env.BASE_URL != '' }}
       shell: bash
       run: ./run cdk --review ${{ github.event.number }} display --pipeline-key=BASE_URL >> $GITHUB_ENV
 
     - name: Update Environment Status
       uses: bobheadxi/deployments@v1.1.0
-      if: ${{ inputs.use_deployments == 'true' && always() }}
+      if: ${{ env.BASE_URL != '' && always() }}
       with:
         step: finish
         token: ${{ inputs.repo_token }}
