@@ -39,6 +39,7 @@ jobs:
       - uses: unitasglobal/nio-shared-actions/deploy@main
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
+          project_name: ${{ inputs.project_name }}
           env_name: staging
           env_url: ${{ inputs.environment_url }}
 

@@ -4,6 +4,9 @@ inputs:
   repo_token:
     description: "Github Token"
     required: true
+  project_name:
+    description: "Project name"
+    required: true
   deploy_flag:
     description: "Flag to pass to ./run cdk deploy"
     required: false
