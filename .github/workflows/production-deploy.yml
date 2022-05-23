@@ -2,10 +2,6 @@ name: production-deploy
 on:
   workflow_call:
     inputs:
-      project_name:
-        description: "Project name"
-        type: string
-        required: true
       db_port:
         description: "Docker Postgres port"
         type: number
