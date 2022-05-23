@@ -10,6 +10,8 @@ jobs:
   review-requested:
     runs-on: ubuntu-latest
     steps:
+      - uses: unitasglobal/nio-shared-actions/python-setup@main
+
       - name: Get Review Requested Slack Block - Individual Reviewer
         if: ${{ github.event.requested_reviewer }}
         run: ./run pipeline review-requested-slack-blocks --pr_title ${{ github.event.pull_request.title }} --pr_url ${{ github.event.pull_request.html_url }} --requestor ${{ github.event.sender.login }} --reviewer ${{ github.event.requested_reviewer.login }}
