@@ -1,0 +1,35 @@
+#!/usr/bin/env python3
+"""Primary run script for Unitas Shared Stack repo."""
+import shlex
+import subprocess
+import sys
+
+
+def _invoke_poetry(cli_args):
+    commands = shlex.join(["poetry", "run", "./run", *cli_args])
+    try:
+        return subprocess.run(commands, shell=True).returncode
+    except KeyboardInterrupt:
+        return 0
+
+
+if __name__ == "__main__":
+    cli_args = sys.argv[1:]
+    if len(cli_args) and cli_args[0] == "local-env":
+        cmd = subprocess.run("./bootstrap.sh", shell=True)
+        exit(cmd.returncode)
+
+    try:
+        # test to see if we are in the venv already
+        import unitas_tools.cli  # noqa
+
+        try:
+            unitas_tools.cli.run_cmd(cli_args)
+        except unitas_tools.cli.MustRunInDockerError as e:
+            unitas_tools.cli.invoke_docker(
+                cli_args, image_name=e.image_name, run_args=e.run_args
+            )
+    except ImportError as exc:
+        if "unitas_tools" in str(exc):
+            exit(_invoke_poetry(cli_args))
+        raise
