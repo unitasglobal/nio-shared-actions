@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "nio-shared-actions"
+version = "0.1.0"
+description = "Shared GitHub Actions for NIO Team Projects"
+authors = ["Lewis Franklin <lewis.franklin@unitasglobal.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+unitas-tools = "^0.15.6"
+
+[tool.poetry.dev-dependencies]
+
+[tool.unitas_tools]
+exclude_cmd_groups = ["auth", "aws", "cdk", "db", "docker", "docs", "test", "data"]
+
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[[tool.poetry.source]]
+name = "nio"
+url = "https://nio-pypi.nexus.unitasglobal.net/simple/"
