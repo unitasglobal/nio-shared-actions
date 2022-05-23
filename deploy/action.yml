@@ -4,6 +4,9 @@ inputs:
   repo_token:
     description: "Github Token"
     required: true
+  project_name:
+    description: "Project name"
+    required: true
   deploy_flag:
     description: "Flag to pass to ./run cdk deploy"
     required: false
@@ -16,15 +19,19 @@ inputs:
     description: "The name of the deploy environment"
     required: false
     default: ""
-  env_url:
-    description: "The URL of the deploy environment"
-    required: false
-    default: ""
 runs:
   using: "composite"
   steps:
+    - uses: unitasglobal/nio-shared-actions/python-setup@main
+      with:
+        install_node: true
+
+    - name: Get Environment URL
+      shell: bash
+      run: ./run cdk display --pipeline-key BASE_URL >> $GITHUB_ENV
+
     - name: Create Review Environment
-      if: ${{ inputs.env_url != '' }}
+      if: ${{ env.BASE_URL != '' }}
       uses: bobheadxi/deployments@v1.1.0
       id: deployment
       with:
@@ -33,10 +40,6 @@ runs:
         env: ${{ inputs.env_name }}
         ref: ${{ github.head_ref }}
         desc: ${{ inputs.env_name }} environment
-
-    - uses: unitasglobal/nio-shared-actions/python-setup@main
-      with:
-        install_node: true
 
     - name: Check for Docs
       id: check_docs
@@ -54,6 +57,12 @@ runs:
       uses: softprops/turnstyle@v1
       env:
         GITHUB_TOKEN: ${{ inputs.repo_token }}
+
+    - name: Ensure No Dependent Workflows In Progress
+      env:
+        GITHUB_TOKEN: ${{ inputs.repo_token }}
+      shell: bash
+      run: ./run pipeline check-dependent-workflows ${{ inputs.deploy_flag }}
 
     - name: Build user docs for deploy
       if: ${{ steps.check_docs.outputs.files_exists == 'true' }}
@@ -76,11 +85,18 @@ runs:
 
     - name: Update Environment Status
       uses: bobheadxi/deployments@v1.1.0
-      if: ${{ inputs.env_url != '' && always() }}
+      if: ${{ env.BASE_URL != '' && always() }}
       with:
         step: finish
         token: ${{ inputs.repo_token }}
         status: ${{ job.status }}
         env: ${{ steps.deployment.outputs.env }}
         deployment_id: ${{ steps.deployment.outputs.deployment_id }}
-        env_url: ${{ inputs.env_url }}
+        env_url: ${{ env.BASE_URL }}
+
+    - name: Post to Slack
+      uses: fjogeleit/http-request-action@master
+      with:
+        url: ${{ secrets.SLACK_WEBHOOK_URL }}
+        method: "POST"
+        data: '{"blocks":[{"type":"section","text":{"type":"mrkdwn","text":"${{ inputs.project_name }} has released to ${{ inputs.env_name }}"}}]}'

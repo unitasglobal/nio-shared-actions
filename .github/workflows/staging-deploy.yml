@@ -11,11 +11,6 @@ on:
         type: number
         required: false
         default: 5432
-      environment_url:
-        description: "The URL of the deploy environment"
-        type: string
-        required: false
-        default: ""
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -32,19 +27,15 @@ env:
 jobs:
   deploy-staging:
     runs-on: ubuntu-latest
-    environment:
-      name: staging
-      url: ${{ inputs.environment_url }}
     steps:
       - uses: unitasglobal/nio-shared-actions/deploy@main
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
+          project_name: ${{ inputs.project_name }}
           env_name: staging
-          env_url: ${{ inputs.environment_url }}
 
-      - name: Post to Slack
-        uses: fjogeleit/http-request-action@master
-        with:
-          url: ${{ secrets.SLACK_WEBHOOK_URL }}
-          method: "POST"
-          data: '{"blocks":[{"type":"section","text":{"type":"mrkdwn","text":"${{ inputs.project_name }} has released to Staging"}},{"type":"divider"},{"type":"section","text":{"type":"mrkdwn","text":"Start Production Build"},"accessory":{"type":"button","text":{"type":"plain_text","text":"Open GitHub","emoji":true},"url":"https://github.com/${{ github.repository }}/actions/workflows/production-deploy.yml","action_id":"button-action"}}]}'
+      - name: Manage Production Run
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: ./run pipeline manage-production-run

@@ -12,11 +12,6 @@ on:
         type: boolean
         required: false
         default: false
-      use_deployments:
-        description: "Use GitHub Deployments for URL"
-        type: boolean
-        required: false
-        default: true
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -114,4 +109,3 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           update_iam: ${{ inputs.update_iam }}
-          use_deployments: ${{ inputs.use_deployments }}
