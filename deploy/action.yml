@@ -97,9 +97,13 @@ runs:
         deployment_id: ${{ steps.deployment.outputs.deployment_id }}
         env_url: ${{ env.BASE_URL }}
 
-    - name: Post to Slack
+    - name: Get Deploy Message
+      shell: bash
+      run: ./run pipeline deploy-slack-blocks >> $GITHUB_ENV
+
+    - name: Post to Slack - Deploy Completed
       uses: fjogeleit/http-request-action@master
       with:
         url: ${{ inputs.slack_webhook_url }}
         method: "POST"
-        data: '{"blocks":[{"type":"section","text":{"type":"mrkdwn","text":"${{ inputs.project_name }} has released to ${{ inputs.env_name }}"}}]}'
+        data: ${{ env.SLACK_BLOCKS }}
