@@ -4,6 +4,10 @@ on:
     types: [review_requested]
   workflow_call:
     secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
       SLACK_WEBHOOK_URL:
         required: true
 env:
@@ -22,7 +26,7 @@ jobs:
 
       - name: Get Review Requested Slack Block - Team Reviewer
         if: ${{ github.event.requested_team }}
-        run: ./run pipeline review-requested-slack-blocks --pr_title "${{ github.event.pull_request.title }}" --pr_url "${{ github.event.pull_request.html_url }}" --requestor "${{ github.event.sender.login }}" --reviewer "${{ github.event.requested_team }}" >> $GITHUB_ENV
+        run: ./run pipeline review-requested-slack-blocks --pr_title "${{ github.event.pull_request.title }}" --pr_url "${{ github.event.pull_request.html_url }}" --requestor "${{ github.event.sender.login }}" --reviewer "${{ github.event.requested_team.name }}" >> $GITHUB_ENV
 
       - name: Post to Slack - Review Requested
         uses: fjogeleit/http-request-action@master

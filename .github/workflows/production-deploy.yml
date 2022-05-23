@@ -2,11 +2,6 @@ name: production-deploy
 on:
   workflow_call:
     inputs:
-      db_port:
-        description: "Docker Postgres port"
-        type: number
-        required: false
-        default: 5432
       update_iam:
         description: "Update IAM Permissions"
         type: boolean
@@ -22,7 +17,6 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }}
   AWS_DEFAULT_REGION: us-east-1
   DOCKER_BUILDKIT: 1
-  DB_PORT: ${{ inputs.db_port }}
 jobs:
   deploy-production:
     runs-on: ubuntu-latest
