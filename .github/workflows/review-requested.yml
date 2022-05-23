@@ -18,11 +18,11 @@ jobs:
 
       - name: Get Review Requested Slack Block - Individual Reviewer
         if: ${{ github.event.requested_reviewer }}
-        run: ./run pipeline review-requested-slack-blocks --pr_title ${{ github.event.pull_request.title }} --pr_url ${{ github.event.pull_request.html_url }} --requestor ${{ github.event.sender.login }} --reviewer ${{ github.event.requested_reviewer.login }}
+        run: ./run pipeline review-requested-slack-blocks --pr_title "${{ github.event.pull_request.title }}" --pr_url "${{ github.event.pull_request.html_url }}" --requestor "${{ github.event.sender.login }}" --reviewer "${{ github.event.requested_reviewer.login }}"
 
       - name: Get Review Requested Slack Block - Team Reviewer
         if: ${{ github.event.requested_team }}
-        run: ./run pipeline review-requested-slack-blocks --pr_title ${{ github.event.pull_request.title }} --pr_url ${{ github.event.pull_request.html_url }} --requestor ${{ github.event.sender.login }} --reviewer ${{ github.event.requested_team }}
+        run: ./run pipeline review-requested-slack-blocks --pr_title "${{ github.event.pull_request.title }}" --pr_url "${{ github.event.pull_request.html_url }}" --requestor "${{ github.event.sender.login }}" --reviewer "${{ github.event.requested_team }}"
 
       - name: Post to Slack - Review Requested
         uses: fjogeleit/http-request-action@master
