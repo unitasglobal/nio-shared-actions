@@ -4,6 +4,9 @@ inputs:
   repo_token:
     description: "Github Token"
     required: true
+  slack_webhook_url:
+    description: "Slack URL for posting to channels"
+    required: true
   project_name:
     description: "Project name"
     required: true
@@ -97,6 +100,6 @@ runs:
     - name: Post to Slack
       uses: fjogeleit/http-request-action@master
       with:
-        url: ${{ secrets.SLACK_WEBHOOK_URL }}
+        url: ${{ inputs.slack_webhook_url }}
         method: "POST"
         data: '{"blocks":[{"type":"section","text":{"type":"mrkdwn","text":"${{ inputs.project_name }} has released to ${{ inputs.env_name }}"}}]}'

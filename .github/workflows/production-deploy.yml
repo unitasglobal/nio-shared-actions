@@ -34,6 +34,7 @@ jobs:
       - uses: unitasglobal/nio-shared-actions/deploy@main
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
+          slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
           project_name: ${{ inputs.project_name }}
           deploy_flag: "--prod"
           update_iam: ${{ inputs.update_iam }}
