@@ -46,8 +46,6 @@ runs:
         GITHUB_TOKEN: ${{ inputs.repo_token }}
 
     - name: Ensure No Dependent Workflows In Progress
-      env:
-        GITHUB_TOKEN: ${{ inputs.repo_token }}
       shell: bash
       run: ./run pipeline check-dependent-workflows
 
