@@ -97,7 +97,7 @@ runs:
 
     - name: Get Deploy Message
       shell: bash
-      run: ./run pipeline deploy-slack-blocks >> $GITHUB_ENV
+      run: ./run pipeline deploy-slack-blocks ${{ inputs.deploy_flag }} >> $GITHUB_ENV
 
     - name: Post to Slack - Deploy Completed
       uses: fjogeleit/http-request-action@master
