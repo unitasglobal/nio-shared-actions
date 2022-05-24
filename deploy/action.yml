@@ -35,7 +35,7 @@ runs:
 
     - name: Create Review Environment
       if: ${{ env.BASE_URL != '' }}
-      uses: bobheadxi/deployments@v1.1.0
+      uses: bobheadxi/deployments@v1.2.0
       id: deployment
       with:
         step: start
@@ -85,7 +85,7 @@ runs:
       run: ./run test deployed
 
     - name: Update Environment Status
-      uses: bobheadxi/deployments@v1.1.0
+      uses: bobheadxi/deployments@v1.2.0
       if: ${{ env.BASE_URL != '' && always() }}
       with:
         step: finish
