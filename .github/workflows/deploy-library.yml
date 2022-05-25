@@ -6,8 +6,6 @@ on:
         required: true
       AWS_SECRET_ACCESS_KEY:
         required: true
-      SLACK_WEBHOOK_URL:
-        required: true
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -20,3 +18,8 @@ jobs:
       - uses: unitasglobal/nio-shared-actions/deploy-library@main
         with:
           slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Post Workflow Failed to Slack
+        if: ${{ failure() }}
+        shell: bash
+        run: ./run pipeline post-workflow-failed-to-slack --workflow-name deploy-library.yml

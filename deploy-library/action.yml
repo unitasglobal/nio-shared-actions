@@ -1,9 +1,5 @@
 name: deploy-library
 description: "Deploy a library"
-inputs:
-  slack-webhook-url:
-    description: "The slack webhook URL to report deployment."
-    required: true
 runs:
   using: "composite"
   steps:
@@ -13,13 +9,6 @@ runs:
       shell: bash
       run: ./run test pypi-has-version || poetry publish --build -r nio
 
-    - name: Get library name and version
+    - name: Post Workflow Failed to Slack
       shell: bash
-      run: echo "LIBRARY_INFO=$(poetry version)" >> $GITHUB_ENV
-
-    - name: Post to Slack
-      uses: fjogeleit/http-request-action@master
-      with:
-        url: ${{ inputs.slack-webhook-url }}
-        method: "POST"
-        data: '{"blocks":[{"type":"section","text":{"type":"mrkdwn","text":"\"${{ env.LIBRARY_INFO }}\" has deployed to NIO PyPI"}}]}'
+      run: ./run pipeline post-library-released-to-slack

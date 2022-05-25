@@ -28,3 +28,8 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage.xml
+
+      - name: Post Workflow Failed to Slack
+        if: ${{ failure() }}
+        shell: bash
+        run: ./run pipeline post-workflow-failed-to-slack --workflow-name update-coverage.yml

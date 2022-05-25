@@ -20,3 +20,8 @@ jobs:
 
       - name: Build and Push Images
         run: ./run docker build-and-push-requirements
+
+      - name: Post Workflow Failed to Slack
+        if: ${{ failure() }}
+        shell: bash
+        run: ./run pipeline post-workflow-failed-to-slack --workflow-name update-requirements.yml
