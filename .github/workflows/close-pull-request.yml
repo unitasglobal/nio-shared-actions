@@ -21,4 +21,4 @@ jobs:
       - name: Post Workflow Failed to Slack
         if: ${{ failure() }}
         shell: bash
-        run: ./run pipeline post-workflow-failed-to-slack --workflow-name deploy-library.yml
+        run: ./run pipeline post-workflow-failed-to-slack --workflow-name close-pull-request.yml
