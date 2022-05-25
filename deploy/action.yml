@@ -4,9 +4,6 @@ inputs:
   repo_token:
     description: "Github Token"
     required: true
-  slack_webhook_url:
-    description: "Slack URL for posting to channels"
-    required: true
   project_name:
     description: "Project name"
     required: true
@@ -97,11 +94,4 @@ runs:
 
     - name: Get Deploy Message
       shell: bash
-      run: ./run pipeline deploy-slack-blocks ${{ inputs.deploy_flag }} >> $GITHUB_ENV
-
-    - name: Post to Slack - Deploy Completed
-      uses: fjogeleit/http-request-action@master
-      with:
-        url: ${{ inputs.slack_webhook_url }}
-        method: "POST"
-        data: ${{ env.SLACK_BLOCKS }}
+      run: ./run pipeline post-deploy-to-slack ${{ inputs.deploy_flag }}

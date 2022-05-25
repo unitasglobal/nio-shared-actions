@@ -8,8 +8,6 @@ on:
         required: true
       AWS_SECRET_ACCESS_KEY:
         required: true
-      SLACK_WEBHOOK_URL:
-        required: true
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -20,17 +18,10 @@ jobs:
     steps:
       - uses: unitasglobal/nio-shared-actions/python-setup@main
 
-      - name: Get Review Requested Slack Block - Individual Reviewer
+      - name: Post Review Requested to Slack - Individual Reviewer
         if: ${{ github.event.requested_reviewer }}
-        run: ./run pipeline review-requested-slack-blocks --pr_title "${{ github.event.pull_request.title }}" --pr_url "${{ github.event.pull_request.html_url }}" --requestor "${{ github.event.sender.login }}" --reviewer "${{ github.event.requested_reviewer.login }}" >> $GITHUB_ENV
+        run: ./run pipeline post-review-requested-to-slack --pr_title "${{ github.event.pull_request.title }}" --pr_url "${{ github.event.pull_request.html_url }}" --requestor "${{ github.event.sender.login }}" --reviewer "${{ github.event.requested_reviewer.login }}"
 
-      - name: Get Review Requested Slack Block - Team Reviewer
+      - name: Post Review Requested to Slack - Team Reviewer
         if: ${{ github.event.requested_team }}
-        run: ./run pipeline review-requested-slack-blocks --pr_title "${{ github.event.pull_request.title }}" --pr_url "${{ github.event.pull_request.html_url }}" --requestor "${{ github.event.sender.login }}" --reviewer "${{ github.event.requested_team.name }}" >> $GITHUB_ENV
-
-      - name: Post to Slack - Review Requested
-        uses: fjogeleit/http-request-action@master
-        with:
-          url: ${{ secrets.SLACK_WEBHOOK_URL }}
-          method: "POST"
-          data: ${{ env.SLACK_BLOCKS }}
+        run: ./run pipeline post-review-requested-to-slack --pr_title "${{ github.event.pull_request.title }}" --pr_url "${{ github.event.pull_request.html_url }}" --requestor "${{ github.event.sender.login }}" --reviewer "${{ github.event.requested_team.name }}"
