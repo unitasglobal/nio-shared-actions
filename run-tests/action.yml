@@ -9,6 +9,10 @@ runs:
   steps:
     - uses: unitasglobal/nio-shared-actions/python-setup@main
 
+    - name: Ensure No Dependent Workflows In Progress
+      shell: bash
+      run: ./run pipeline check-dependent-workflows
+
     - name: Execute Tests
       shell: bash
       run: ./run test ci
