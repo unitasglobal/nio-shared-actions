@@ -1595,8 +1595,8 @@ reference = "nio"
 
 [[package]]
 name = "unitas-tools"
-version = "0.15.9"
-description = "Collection of shared utilities"
+version = "0.16.5"
+description = "Unitas Tools Library"
 category = "main"
 optional = false
 python-versions = ">=3.9,<4.0"
@@ -1688,7 +1688,7 @@ reference = "nio"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "2dab0bcaaa6aea07a82ef2f4be33215a40084d06470b333420e06ac72c730a1c"
+content-hash = "ae86958b30769eb96e9a221166f3ab18996408d8c9dfad9f5589ecd1e8f0f43d"
 
 [metadata.files]
 alembic = [
@@ -2458,8 +2458,8 @@ typing-extensions = [
     {file = "typing_extensions-4.2.0.tar.gz", hash = "sha256:f1c24655a0da0d1b67f07e17a5e6b2a105894e6824b92096378bb3668ef02376"},
 ]
 unitas-tools = [
-    {file = "unitas_tools-0.15.9-py3-none-any.whl", hash = "md5:9d02cc7ce440a57be1f3a00a1e4184bc"},
-    {file = "unitas_tools-0.15.9.tar.gz", hash = "md5:ed139530ea86c6365dba2d16ad2fefd5"},
+    {file = "unitas_tools-0.16.5-py3-none-any.whl", hash = "md5:47daa9f63066470cdabaaa307b04ac90"},
+    {file = "unitas_tools-0.16.5.tar.gz", hash = "md5:24c320a54dcd1fc7cf14ffb1292c18b1"},
 ]
 urllib3 = [
     {file = "urllib3-1.26.9-py2.py3-none-any.whl", hash = "sha256:44ece4d53fb1706f667c9bd1c648f5469a2ec925fcf3a776667042d645472c14"},
