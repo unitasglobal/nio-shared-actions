@@ -25,7 +25,7 @@ jobs:
         run: ./run pipeline check-dependent-workflows
 
       - name: Execute Tests
-        run: ./run test ci
+        run: ./run pipeline check-for-test-run --branch-name ${{ github.event.pull_request.head.ref }} && ./run test ci
 
       - name: Upload to CodeCov
         uses: codecov/codecov-action@v2
