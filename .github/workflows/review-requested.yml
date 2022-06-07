@@ -27,12 +27,12 @@ jobs:
           FULL_URL="${URL}notify?event_type=review_requested&repo=${repo}"
 
           if [ -n "${{ github.event.requested_reviewer }}" ]; then
-            data_string="--pr_title \"${{ github.event.pull_request.title}}\" --pr_url ${{ github.event.pull_request.html_url }} --requestor ${{ github.event.sender.login }} --reviewer ${{ github.event.requested_reviewer.login }}"
+            data_string="--pr_title '${{ github.event.pull_request.title }}' --pr_url ${{ github.event.pull_request.html_url }} --requestor ${{ github.event.sender.login }} --reviewer ${{ github.event.requested_reviewer.login }}"
           elif [ -n "${{ github.event.requested_team }}" ]; then
-            data_string="--pr_title \"${{ github.event.pull_request.title}}\" --pr_url ${{ github.event.pull_request.html_url }} --requestor ${{ github.event.sender.login }} --reviewer ${{ github.event.requested_team.name }}"
+            data_string="--pr_title '${{ github.event.pull_request.title }}' --pr_url ${{ github.event.pull_request.html_url }} --requestor ${{ github.event.sender.login }} --reviewer ${{ github.event.requested_team.name }}"
           else
             echo "No Reviewer Found!"
             exit 1
           fi
 
-          curl -X POST -H "X-Api-Token: ${TOKEN}" "$FULL_URL" -d "${data_string//\"/\\\"}"
+          curl -X POST -H "X-Api-Token: ${TOKEN}" "$FULL_URL" -d "$data_string"
