@@ -25,9 +25,9 @@ jobs:
           IFS=/ read -r owner repo <<< "${{ github.repository }}"
 
           echo "::set-output name=token_header::X-Api-Token: ${TOKEN}"
-          echo "::set-output name=full_url::${URL}notify?event_type=review_requested&${repo}"
+          echo "::set-output name=full_url::${URL}notify?event_type=review_requested&repo=${repo}"
 
-          data_string="--pr-title \"${{ github.event.pull_request.title}}\" --pr_url \"${{ github.event.pull_request.html_url}}\" --requestor \"${{ github.event.sender.login }}\" --reviewer"
+          data_string="--pr_title \"${{ github.event.pull_request.title}}\" --pr_url \"${{ github.event.pull_request.html_url }}\" --requestor \"${{ github.event.sender.login }}\" --reviewer"
           echo "::set-output name=data_string::$data_string"
 
 
@@ -35,10 +35,10 @@ jobs:
         if: ${{ github.event.requested_reviewer }}
         run: |
           data_string="${{ steps.set-values.outputs.data_string }} \"${{ github.events.requested_reviewer.login }}\""
-          curl -X POST -H "${{ steps.set-values.outputs.token_header }}" "${{ steps.set-values.outputs.full_url }}" -d "'$data_string'"
+          curl -X POST -H "${{ steps.set-values.outputs.token_header }}" "${{ steps.set-values.outputs.full_url }}" -d "$data_string"
 
       - name: Post Review Requested to Slack - Team Reviewer
         if: ${{ github.event.requested_team }}
         run: |
           data_string="${{ steps.set-values.outputs.data_string }} \"${{ github.events.requested_team.login }}\""
-          curl -X POST -H "${{ steps.set-values.outputs.token_header }}" "${{ steps.set-values.outputs.full_url }}" -d "'$data_string'"
+          curl -X POST -H "${{ steps.set-values.outputs.token_header }}" "${{ steps.set-values.outputs.full_url }}" -d "$data_string"
