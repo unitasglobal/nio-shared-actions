@@ -20,17 +20,25 @@ jobs:
         id: set-values
         run: |
           URL=$(aws ssm get-parameter --name ' /nio/development/slack_notifications/url' --with-decryption | jq -r '.Parameter.Value')
-          echo "::set-output name=url::$URL"
           TOKEN=$(aws ssm get-parameter --name ' /nio/development/slack_notifications/token' --with-decryption | jq -r '.Parameter.Value')
-          echo "::set-output name=token::$TOKEN"
+
+          IFS=/ read -r owner repo <<< "${{ github.repository }}"
+
+          echo "::set-output name=token_header::X-Api-Token: ${TOKEN}"
+          echo "::set-output name=full_url::${URL}notify?event_type=review_requested&${repo}"
+
+          data_string="--pr-title \"${{ github.event.pull_request.title}}\" --pr_url \"${{ github.event.pull_request.html_url}}\" --requestor \"${{ github.event.sender.login }}\" --reviewer"
+          echo "::set-output name=data_string::$data_string"
 
 
       - name: Post Review Requested to Slack - Individual Reviewer
         if: ${{ github.event.requested_reviewer }}
         run: |
-          curl -X POST -H "X-Api-Token: ${{ steps.set-values.outputs.token }}" "${{ steps.set-values.outputs.url }}notify?event_type=review_requested&repo=${{ github.repository }}" -d "--pr_title \'${{ github.event.pull_request.title }}\' --pr_url \'${{ github.event.pulL_request.html_url }}\' --requestor \'${{ github.event.sender.login }}\' --reviewer \'${{ github.event.requested_reviewer.login }}\'"
+          data_string="${{ steps.set-values.outputs.data_string }} \"${{ github.events.requested_reviewer.login }}\""
+          curl -X POST -H "${{ steps.set-values.outputs.token_header }}" "${{ steps.set-values.outputs.full_url }}" -d "'$data_string'"
 
       - name: Post Review Requested to Slack - Team Reviewer
         if: ${{ github.event.requested_team }}
         run: |
-          curl -X POST -H "X-Api-Token: $API_TOKEN" "${API_URL}notify?event_type=review_requested&repo=${{ github.repository }}" -d "--pr_title \'${{ github.event.pull_request.title }}\' --pr_url \'${{ github.event.pulL_request.html_url }}\' --requestor \'${{ github.event.sender.login }}\' --reviewer \'${{ github.event.requested_team.login }}\'"
+          data_string="${{ steps.set-values.outputs.data_string }} \"${{ github.events.requested_team.login }}\""
+          curl -X POST -H "${{ steps.set-values.outputs.token_header }}" "${{ steps.set-values.outputs.full_url }}" -d "'$data_string'"
