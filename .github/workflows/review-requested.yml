@@ -18,9 +18,9 @@ jobs:
     steps:
       - name: Set URL and Token Values
         run: |
-          URL=$(aws ssm get-parameter --name ' /nio/development/slack_notifications/url' --with-decryption | jq '.SecureString')
+          URL=$(aws ssm get-parameter --name ' /nio/development/slack_notifications/url' --with-decryption | jq -r '.Parameter.Value')
           echo "API_URL=$URL" >> GITHUB_ENV
-          TOKEN=$(aws ssm get-parameter --name ' /nio/development/slack_notifications/token' --with-decryption | jq '.SecureString')
+          TOKEN=$(aws ssm get-parameter --name ' /nio/development/slack_notifications/token' --with-decryption | jq -r '.Parameter.Value')
           echo "API_TOKEN=$TOKEN" >> GITHUB_ENV
 
 
