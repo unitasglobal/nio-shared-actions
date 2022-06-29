@@ -34,12 +34,11 @@ jobs:
           script: |
             import urllib.request
 
-            reviewer_name = "the_boogeyman"
             requested_reviewer = "${{ github.event.requested_reviewer }}"
+            requested_team = "${{ github.event.requested_team }}"
             if requested_reviewer:
               reviewer_name = "${{ github.event.requested_reviewer.login }}"
-            requested_team = "${{ github.event.requested_team }}"
-            if requested_team:
+            elif requested_team:
               reviewer_name = "${{ github.event.requested_team.name }}"
 
             repo = "${{ github.repository }}".split("/")[0]
