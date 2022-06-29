@@ -46,5 +46,5 @@ jobs:
 
             request = urllib.request.Request("${{ steps.endpoint-details.outputs.url }}notify?event_type=review_requested&repo=" + repo, headers={"X-Api-Token": "${{ steps.endpoint-details.outputs.token }}"}, method="POST")
 
-            data_string = "--pr_title '${{ github.event.pull_request.title }}' --pr_url ${{ github.event.pull_request.html_url }} --requestor ${{ github.event.sender.login }} --reviewer " + requested_reviewer
+            data_string = "--pr_title '${{ github.event.pull_request.title }}' --pr_url ${{ github.event.pull_request.html_url }} --requestor ${{ github.event.sender.login }} --reviewer " + reviewer_name
             urllib.request.urlopen(request, data=data_string.encode("utf-8"))
