@@ -42,7 +42,7 @@ jobs:
             if requested_team:
               reviewer_name = "${{ github.event.requested_team.name }}"
 
-            request = urllib.request.Request("${{ steps.endpoint-details.url }}", headers={"X-Api-Token": "${{ steps.endpoint-details.token }}"}, method="POST")
+            request = urllib.request.Request("${{ steps.endpoint-details.outputs.url }}", headers={"X-Api-Token": "${{ steps.endpoint-details.outputs.token }}"}, method="POST")
 
             data_string = "--pr_title '${{ github.event.pull_request.title }}' --pr_url ${{ github.event.pull_request.html_url }} --requestor ${{ github.event.sender.login }} --reviewer " + requested_reviewer
             urllib.request.urlopen(request, data=data_string)
