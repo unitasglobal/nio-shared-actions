@@ -2,8 +2,6 @@ name: review-requested
 on:
   pull_request:
     types: [review_requested]
-  workflow_dispatch:
-
   workflow_call:
     secrets:
       AWS_ACCESS_KEY_ID:
