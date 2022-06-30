@@ -31,7 +31,6 @@ jobs:
         with:
           script: |
             import json
-            import os
             import urllib.request
 
             requested_reviewer = "${{ github.event.requested_reviewer }}"
@@ -43,16 +42,21 @@ jobs:
 
             repo = "${{ github.repository }}".split("/")[0]
 
-            request = urllib.request.Request(
-              "${{ steps.endpoint-details.outputs.url }}notify?event_type=review_requested&repo=" + repo,
-              headers={"X-Api-Token": "${{ steps.endpoint-details.outputs.token }}"},
-              method="POST"
-            )
-
             data = {
               "pr_url": "${{ github.event.pull_request.html_url }}",
               "requestor": "${{ github.event.sender.login }}",
               "reviewer": reviewer_name
             }
             request_data = json.dumps(data).encode("utf-8")
-            urllib.request.urlopen(request, data=request_data)
+
+            request = urllib.request.Request(
+              "${{ steps.endpoint-details.outputs.url }}notify?event_type=review_requested&repo=" + repo,
+              headers={
+                "X-Api-Token": "${{ steps.endpoint-details.outputs.token }}",
+                "Content-Type"; "application/json"
+              },
+              method="POST",
+              data=request_data
+            )
+
+            urllib.request.urlopen(request)
