@@ -53,7 +53,7 @@ jobs:
               "${{ steps.endpoint-details.outputs.url }}notify?event_type=review_requested&repo=" + repo,
               headers={
                 "X-Api-Token": "${{ steps.endpoint-details.outputs.token }}",
-                "Content-Type"; "application/json"
+                "Content-Type": "application/json"
               },
               method="POST",
               data=request_data
