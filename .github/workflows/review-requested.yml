@@ -16,22 +16,47 @@ jobs:
   review-requested:
     runs-on: ubuntu-latest
     steps:
-      - name: Post Review Requested to Slack
+      - name: Get URL and Token
+        id: endpoint-details
         run: |
           URL=$(aws ssm get-parameter --name ' /nio/development/slack_notifications/url' --with-decryption | jq -r '.Parameter.Value')
           TOKEN=$(aws ssm get-parameter --name ' /nio/development/slack_notifications/token' --with-decryption | jq -r '.Parameter.Value')
+          echo "::set-output name=url::$URL"
+          echo "::set-output name=token::$TOKEN"
 
-          IFS=/ read -r owner repo <<< "${{ github.repository }}"
+      - uses: actions/setup-python@v2
 
-          FULL_URL="${URL}notify?event_type=review_requested&repo=${repo}"
+      - name: Call to send notification
+        uses: jannekem/run-python-script-action@v1
+        with:
+          script: |
+            import json
+            import urllib.request
 
-          if [ -n "${{ github.event.requested_reviewer }}" ]; then
-            data_string="--pr_title '${{ github.event.pull_request.title }}' --pr_url ${{ github.event.pull_request.html_url }} --requestor ${{ github.event.sender.login }} --reviewer ${{ github.event.requested_reviewer.login }}"
-          elif [ -n "${{ github.event.requested_team }}" ]; then
-            data_string="--pr_title '${{ github.event.pull_request.title }}' --pr_url ${{ github.event.pull_request.html_url }} --requestor ${{ github.event.sender.login }} --reviewer ${{ github.event.requested_team.name }}"
-          else
-            echo "No Reviewer Found!"
-            exit 1
-          fi
+            requested_reviewer = "${{ github.event.requested_reviewer }}"
+            requested_team = "${{ github.event.requested_team }}"
+            if requested_reviewer:
+              reviewer_name = "${{ github.event.requested_reviewer.login }}"
+            elif requested_team:
+              reviewer_name = "${{ github.event.requested_team.name }}"
 
-          curl -X POST -H "X-Api-Token: ${TOKEN}" "$FULL_URL" -d "$data_string"
+            repo = "${{ github.repository }}".split("/")[-1]
+
+            data = {
+              "pr_url": "${{ github.event.pull_request.html_url }}",
+              "requestor": "${{ github.event.sender.login }}",
+              "reviewer": reviewer_name
+            }
+            request_data = json.dumps(data).encode("utf-8")
+
+            request = urllib.request.Request(
+              "${{ steps.endpoint-details.outputs.url }}notify?event_type=review_requested&repo=" + repo,
+              headers={
+                "X-Api-Token": "${{ steps.endpoint-details.outputs.token }}",
+                "Content-Type": "application/json"
+              },
+              method="POST",
+              data=request_data
+            )
+
+            urllib.request.urlopen(request)
