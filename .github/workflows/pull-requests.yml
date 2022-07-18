@@ -90,9 +90,33 @@ jobs:
         with:
           version_check: ${{ inputs.version_check }}
 
+  check-merge-base:
+    name: Check against main
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            const base_ref = process.env.GITHUB_BASE_REF;
+            const head_ref = process.env.GITHUB_HEAD_REF;
+            console.log(`Base ref: ${base_ref}`);
+            console.log(`Head ref: ${head_ref}`);
+            const res = await github.rest.repos.compareCommits({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              base: base_ref,
+              head: head_ref
+            });
+            const diff = res.data;
+            console.log(diff);
+            if (diff.behind_by != 0) {
+              core.setFailed(`"${head_ref}" is behind ${base_ref} by ${diff.behind_by} commits`)
+            }
+
+
   test:
     name: Run Tests
-    needs: [changes, static-analysis]
+    needs: [changes, static-analysis, check-merge-base]
     if: ${{ needs.changes.outputs.has_tests == 'true' && (needs.changes.outputs.tests == 'true' || needs.changes.outputs.src == 'true' || needs.changes.outputs.ci-files == 'true') }}
     runs-on: ubuntu-latest
     steps:
@@ -102,7 +126,7 @@ jobs:
 
   deploy-review:
     name: Deploy Review Environment
-    needs: [changes, static-analysis, test, db-branch-check]
+    needs: [changes, static-analysis, test, db-branch-check, check-merge-base]
     if: ${{ failure() != true && cancelled() != true && (needs.changes.outputs.src == 'true' || needs.changes.outputs.stack-files == 'true') }}
     runs-on: ubuntu-latest
     steps:
