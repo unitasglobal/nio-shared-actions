@@ -96,14 +96,22 @@ jobs:
     steps:
       - uses: actions/github-script@v6
         with:
-          script:
-            diff = github.rest.repos.compareCommits({
-              context.github.owner,
-              context.github.repo,
-              'main',
-              context.github.head_ref
-            })
-            assert(diff.behind_by == 0)
+          script: |
+            const base_ref = process.env.GITHUB_BASE_REF;
+            const head_ref = process.env.GITHUB_HEAD_REF;
+            console.log(`Base ref: ${base_ref}`);
+            console.log(`Head ref: ${head_ref}`);
+            const res = github.rest.repos.compareCommits({
+              owner: context.github.owner,
+              repo: context.github.repo,
+              base: base_ref,
+              head: head_ref
+            });
+            const diff = res.data;
+            console.log(diff);
+            if (diff.behind_by != 0) {
+              core.setFailed(`"${head_ref}" is behind ${base_ref} by ${diff.behind_by} commits`)
+            }
 
 
   test:
