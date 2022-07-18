@@ -101,7 +101,7 @@ jobs:
             const head_ref = process.env.GITHUB_HEAD_REF;
             console.log(`Base ref: ${base_ref}`);
             console.log(`Head ref: ${head_ref}`);
-            const res = github.rest.repos.compareCommits({
+            const res = await github.rest.repos.compareCommits({
               owner: context.repo.owner,
               repo: context.repo.repo,
               base: base_ref,
