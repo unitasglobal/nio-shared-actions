@@ -90,6 +90,22 @@ jobs:
         with:
           version_check: ${{ inputs.version_check }}
 
+  check-merge-base:
+    name: Check against main
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          script:
+            diff = github.rest.repos.compareCommits({
+              context.github.owner,
+              context.github.repo,
+              'main',
+              context.github.head_ref
+            })
+            assert(diff.behind_by == 0)
+
+
   test:
     name: Run Tests
     needs: [changes, static-analysis]
