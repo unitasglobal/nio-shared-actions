@@ -65,7 +65,7 @@ runs:
     - name: Build user docs for deploy
       if: ${{ steps.check_docs.outputs.files_exists == 'true' }}
       shell: bash
-      run: ./run docs build-user-docs
+      run: ./run docs build-docs
 
     - name: Update IAM Permissions
       if: ${{ inputs.update_iam == 'true' }}

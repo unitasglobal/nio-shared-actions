@@ -52,7 +52,7 @@ runs:
     - name: Build docs for deploy
       if: ${{ steps.check_docs.outputs.files_exists == 'true' }}
       shell: bash
-      run: ./run docs build-user-docs
+      run: ./run docs build-docs
 
     - name: Synthesize Default Stacks
       shell: bash
