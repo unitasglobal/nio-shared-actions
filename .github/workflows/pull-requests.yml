@@ -113,7 +113,6 @@ jobs:
               core.setFailed(`"${head_ref}" is behind ${base_ref} by ${diff.behind_by} commits`)
             }
 
-
   test:
     name: Run Tests
     needs: [changes, static-analysis, check-merge-base]
