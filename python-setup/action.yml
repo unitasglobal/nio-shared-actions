@@ -25,7 +25,7 @@ runs:
       uses: docker/setup-qemu-action@v1
 
     - name: use Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       if: ${{ inputs.install_node == 'true' }}
       with:
         node-version: "14"
