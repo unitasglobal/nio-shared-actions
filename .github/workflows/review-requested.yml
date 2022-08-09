@@ -24,7 +24,7 @@ jobs:
           echo "::set-output name=url::$URL"
           echo "::set-output name=token::$TOKEN"
 
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v3
 
       - name: Call to send notification
         uses: jannekem/run-python-script-action@v1
