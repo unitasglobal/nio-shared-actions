@@ -16,16 +16,16 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         fetch-depth: ${{ inputs.fetch_depth }}
 
     - name: Set up QEMU
       if: runner.os == 'Linux'
-      uses: docker/setup-qemu-action@v1
+      uses: docker/setup-qemu-action@v2
 
     - name: use Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       if: ${{ inputs.install_node == 'true' }}
       with:
         node-version: "14"
@@ -35,7 +35,7 @@ runs:
       uses: montudor/action-zip@v1
 
     - name: Setup Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v3
       with:
         python-version: ${{ inputs.python_version }}
 
@@ -44,7 +44,7 @@ runs:
       run: pip install poetry
 
     - name: Cache Poetry virtualenv
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       id: poetry-cache
       with:
         path: ~/.cache/pypoetry
