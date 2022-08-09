@@ -12,7 +12,7 @@ runs:
         install_node: true
 
     - name: Deactivate Review Environment
-      uses: bobheadxi/deployments@v1.2.0
+      uses: bobheadxi/deployments@v1.3.0
       with:
         step: delete-env
         token: ${{ inputs.repo_token }}
