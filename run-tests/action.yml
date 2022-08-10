@@ -31,7 +31,7 @@ runs:
         files: ./coverage.xml
 
     - name: PyTest Results Comment
-      uses: MishaKav/pytest-coverage-comment@v1
+      uses: MishaKav/pytest-coverage-comment@v1.1.31
       with:
         junitxml-path: ./junit.xml
         junitxml-title: Test Results
