@@ -7,6 +7,11 @@ on:
         type: boolean
         required: false
         default: false
+      db_revision_check:
+        description: "Check for multiple alembic HEADs"
+        type: boolean
+        required: false
+        default: true
       update_iam:
         description: "Update IAM Permissions"
         type: boolean
@@ -75,7 +80,7 @@ jobs:
   db-branch-check:
     name: Check for Alembic Branches
     needs: changes
-    if: ${{ needs.changes.outputs.revisions == 'true' }}
+    if: ${{ (inputs.db_revision_check == 'true') && (needs.changes.outputs.revisions == 'true') }}
     runs-on: ubuntu-latest
     steps:
       - uses: unitasglobal/nio-shared-actions/db-branch-check@main
