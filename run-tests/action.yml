@@ -21,7 +21,7 @@ runs:
       if: success() || failure()
       with:
         name: PyTest Results
-        path: junit.xml
+        path: junit*.xml
         reporter: java-junit
 
     - name: Upload to CodeCov
@@ -33,5 +33,4 @@ runs:
     - name: PyTest Results Comment
       uses: MishaKav/pytest-coverage-comment@v1.1.31
       with:
-        junitxml-path: ./junit.xml
-        junitxml-title: Test Results
+        pytest-xml-coverage-path: ./coverage.xml
