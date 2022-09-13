@@ -31,6 +31,6 @@ runs:
         files: ./coverage.xml
 
     - name: PyTest Results Comment
-      uses: MishaKav/pytest-coverage-comment@v1.1.31
+      uses: MishaKav/pytest-coverage-comment@v1.1.35
       with:
         pytest-xml-coverage-path: ./coverage.xml
