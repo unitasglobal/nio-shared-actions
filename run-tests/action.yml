@@ -34,4 +34,3 @@ runs:
       uses: MishaKav/pytest-coverage-comment@v1.1.31
       with:
         pytest-xml-coverage-path: ./coverage.xml
-        junitxml-title: Test Results
