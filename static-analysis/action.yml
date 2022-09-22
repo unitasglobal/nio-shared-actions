@@ -38,7 +38,7 @@ runs:
 
     - name: ensure main is accessible
       shell: bash
-      run: git branch main >/dev/null 2>&1 || true
+      run: git branch main origin/main >/dev/null 2>&1 || true
 
     - name: Run Version Check
       if: ${{ inputs.version_check == 'true' }}
