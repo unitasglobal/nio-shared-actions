@@ -44,7 +44,7 @@ jobs:
       - id: project_src_name
         run: |
           export PROJECT_SRC=$(basename "$GITHUB_REPOSITORY" | sed 's/-/_/g')
-          echo "::set-output name=project_src::$PROJECT_SRC"
+          echo "project_src=$PROJECT_SRC" >> $GITHUB_OUTPUT
 
       - uses: dorny/paths-filter@v2
         id: filter
