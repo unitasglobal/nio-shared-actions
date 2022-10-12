@@ -21,8 +21,8 @@ jobs:
         run: |
           URL=$(aws ssm get-parameter --name ' /nio/development/slack_notifications/url' --with-decryption | jq -r '.Parameter.Value')
           TOKEN=$(aws ssm get-parameter --name ' /nio/development/slack_notifications/token' --with-decryption | jq -r '.Parameter.Value')
-          echo "::set-output name=url::$URL"
-          echo "::set-output name=token::$TOKEN"
+          echo "url=$URL" >> $GITHUB_OUTPUT
+          echo "token=$TOKEN" >> $GITHUB_OUTPUT
 
       - uses: actions/setup-python@v3
 

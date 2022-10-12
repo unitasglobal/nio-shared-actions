@@ -18,7 +18,7 @@ runs:
       run: |
         fetch_depth=1
         if [[ ${{ inputs.version_check }} == 'true' ]]; then fetch_depth=0; fi
-        echo "::set-output name=fetch_depth::$fetch_depth"
+        echo "fetch_depth=$fetch_depth" >> $GITHUB_OUTPUT
 
     - uses: unitasglobal/nio-shared-actions/python-setup@main
       with:
