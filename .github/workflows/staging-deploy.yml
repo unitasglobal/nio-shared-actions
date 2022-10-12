@@ -1,6 +1,12 @@
 name: staging-deploy
 on:
   workflow_call:
+    inputs:
+      python_version:
+        description: "The python version to use, in the format '{major}.{minor}'"
+        type: string
+        default: "3.9"
+        required: false
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -19,6 +25,7 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           project_name: ${{ inputs.project_name }}
+          python_version: ${{ inputs.python_version }}
           env_name: staging
 
       - name: Manage Production Run
