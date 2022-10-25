@@ -17,6 +17,11 @@ on:
         type: boolean
         required: false
         default: false
+      python_version:
+        description: "The python version to use, in the format '{major}.{minor}'"
+        type: string
+        default: "3.9"
+        required: false
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -94,6 +99,7 @@ jobs:
       - uses: unitasglobal/nio-shared-actions/static-analysis@main
         with:
           version_check: ${{ inputs.version_check }}
+          python_version: ${{ inputs.python_version }}
 
   check-merge-base:
     name: Check against main
@@ -127,6 +133,7 @@ jobs:
       - uses: unitasglobal/nio-shared-actions/run-tests@main
         with:
           codecov-token: ${{ secrets.CODECOV_TOKEN }}
+          python_version: ${{ inputs.python_version }}
 
   deploy-review:
     name: Deploy Review Environment
@@ -138,3 +145,4 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           update_iam: ${{ inputs.update_iam }}
+          python_version: ${{ inputs.python_version }}
