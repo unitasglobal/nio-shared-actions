@@ -1,6 +1,12 @@
 name: update-requirements
 on:
   workflow_call:
+    inputs:
+      python_version:
+        description: "The python version to use, in the format '{major}.{minor}'"
+        type: string
+        default: "3.9"
+        required: false
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -17,6 +23,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: unitasglobal/nio-shared-actions/python-setup@main
+        with:
+          python_version: ${{ inputs.python_version }}
 
       - name: Build and Push Images
         run: ./run docker build-and-push-requirements

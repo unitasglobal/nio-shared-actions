@@ -8,10 +8,16 @@ inputs:
     description: "Update IAM Permissions"
     required: false
     default: "false"
+  python_version:
+    description: "The python version to use, in the format '{major}.{minor}'"
+    default: "3.9"
+    required: false
 runs:
   using: "composite"
   steps:
     - uses: unitasglobal/nio-shared-actions/python-setup@main
+      with:
+        python_version: ${{ inputs.python_version }}
 
     - name: Check for Docs
       id: check_docs
