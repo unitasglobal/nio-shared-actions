@@ -26,7 +26,7 @@ jobs:
     steps:
       - uses: unitasglobal/nio-shared-actions/python-setup@main
         with:
-          python_version: ${{ python_version }}
+          python_version: ${{ inputs.python_version }}
 
       - name: Ensure No Dependent Workflows In Progress
         shell: bash
