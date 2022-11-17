@@ -21,13 +21,13 @@ runs:
 
     - name: Check for Docs
       id: check_docs
-      uses: andstor/file-existence-action@v1
+      uses: andstor/file-existence-action@v2
       with:
         files: "docs/*"
 
     - name: Check for Deploy Tests
       id: check_deploy_tests
-      uses: andstor/file-existence-action@v1
+      uses: andstor/file-existence-action@v2
       with:
         files: "tests/deploy_tests/*"
 
