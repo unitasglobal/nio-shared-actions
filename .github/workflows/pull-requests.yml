@@ -77,7 +77,7 @@ jobs:
 
       - uses: actions/checkout@v3
 
-      - uses: andstor/file-existence-action@v1
+      - uses: andstor/file-existence-action@v2
         id: check_files
         with:
           files: "tests/conftest.py"
