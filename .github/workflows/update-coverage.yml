@@ -36,7 +36,7 @@ jobs:
         run: ./run pipeline check-for-test-run --branch-name ${{ github.event.pull_request.head.ref }} && ./run test ci || true
 
       - name: Upload to CodeCov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage.xml

@@ -31,12 +31,12 @@ runs:
         reporter: java-junit
 
     - name: Upload to CodeCov
-      uses: codecov/codecov-action@v2
+      uses: codecov/codecov-action@v3
       with:
         token: ${{ inputs.codecov-token }}
         files: ./coverage.xml
 
     - name: PyTest Results Comment
-      uses: MishaKav/pytest-coverage-comment@v1.1.35
+      uses: MishaKav/pytest-coverage-comment@v1.1.37
       with:
         pytest-xml-coverage-path: ./coverage.xml

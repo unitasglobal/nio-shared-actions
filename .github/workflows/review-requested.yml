@@ -24,7 +24,7 @@ jobs:
           echo "url=$URL" >> $GITHUB_OUTPUT
           echo "token=$TOKEN" >> $GITHUB_OUTPUT
 
-      - uses: actions/setup-python@v3
+      - uses: actions/setup-python@v4
 
       - name: Call to send notification
         uses: jannekem/run-python-script-action@v1
