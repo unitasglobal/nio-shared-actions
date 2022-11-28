@@ -25,6 +25,7 @@ env:
 jobs:
   deploy-production:
     runs-on: ubuntu-latest
+    concurrency: deploy_production
     steps:
       - uses: unitasglobal/nio-shared-actions/deploy@main
         with:

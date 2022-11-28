@@ -58,11 +58,6 @@ runs:
       with:
         files: "tests/deploy_tests/*"
 
-    - name: Ensure Only One Deploy Run
-      uses: softprops/turnstyle@v1
-      env:
-        GITHUB_TOKEN: ${{ inputs.repo_token }}
-
     - name: Ensure No Dependent Workflows In Progress
       shell: bash
       run: ./run pipeline check-dependent-workflows ${{ inputs.deploy_flag }}
