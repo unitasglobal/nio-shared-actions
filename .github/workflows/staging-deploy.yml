@@ -20,6 +20,7 @@ env:
 jobs:
   deploy-staging:
     runs-on: ubuntu-latest
+    concurrency: deploy_staging
     steps:
       - uses: unitasglobal/nio-shared-actions/deploy@main
         with:

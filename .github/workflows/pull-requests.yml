@@ -137,6 +137,7 @@ jobs:
 
   deploy-review:
     name: Deploy Review Environment
+    concurrency: deploy-review-${{ github.ref_name }}
     needs: [changes, static-analysis, test, db-branch-check, check-merge-base]
     if: ${{ failure() != true && cancelled() != true && (needs.changes.outputs.src == 'true' || needs.changes.outputs.stack-files == 'true') }}
     runs-on: ubuntu-latest
