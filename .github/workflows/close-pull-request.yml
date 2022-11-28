@@ -19,7 +19,7 @@ env:
 jobs:
   review-cleanup:
     runs-on: ubuntu-latest
-    concurrency: review_cleanup
+    concurrency: review-cleanup-${{ github.ref_name }}
     steps:
       - uses: unitasglobal/nio-shared-actions/review-cleanup@main
         with:
