@@ -64,7 +64,7 @@ runs:
 
     - name: Synthesize Default Stacks
       shell: bash
-      run: ./run cdk synth
+      run: ./run cdk --review ${{ github.event.number }} synth
 
     - name: Update IAM Permissions
       if: ${{ inputs.update_iam == 'true' }}
