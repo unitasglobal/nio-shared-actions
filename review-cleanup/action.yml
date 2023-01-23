@@ -16,6 +16,10 @@ runs:
         install_node: true
         python_version: ${{ inputs.python_version }}
 
+    - name: Remove Review Stack
+      shell: bash
+      run: ./run cdk --review ${{ github.event.number }} remove
+
     - name: Deactivate Review Environment
       uses: bobheadxi/deployments@v1.4.0
       with:
@@ -23,7 +27,3 @@ runs:
         token: ${{ inputs.repo_token }}
         env: review-${{ github.event.number }}
         desc: Environment Pruned
-
-    - name: Remove Review Stack
-      shell: bash
-      run: ./run cdk --review ${{ github.event.number }} remove
