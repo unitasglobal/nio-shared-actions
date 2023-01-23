@@ -25,7 +25,6 @@ runs:
         platforms: linux/amd64,linux/arm64
         use: false
 
-
     - name: Check for Docs
       id: check_docs
       uses: andstor/file-existence-action@v2
@@ -44,7 +43,7 @@ runs:
 
     - name: Create Review Environment
       if: ${{ env.BASE_URL != '' }}
-      uses: bobheadxi/deployments@v1.3.0
+      uses: bobheadxi/deployments@v1.4.0
       id: deployment
       with:
         step: start
@@ -86,7 +85,7 @@ runs:
       run: ./run cdk --review ${{ github.event.number }} display --pipeline-key=BASE_URL >> $GITHUB_ENV
 
     - name: Update Environment Status
-      uses: bobheadxi/deployments@v1.3.0
+      uses: bobheadxi/deployments@v1.4.0
       if: ${{ env.BASE_URL != '' && always() }}
       with:
         step: finish

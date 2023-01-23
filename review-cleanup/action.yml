@@ -17,7 +17,7 @@ runs:
         python_version: ${{ inputs.python_version }}
 
     - name: Deactivate Review Environment
-      uses: bobheadxi/deployments@v1.3.0
+      uses: bobheadxi/deployments@v1.4.0
       with:
         step: delete-env
         token: ${{ inputs.repo_token }}
