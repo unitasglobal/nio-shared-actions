@@ -12,8 +12,6 @@ on:
         required: true
       AWS_SECRET_ACCESS_KEY:
         required: true
-      GH_BOT_PAT:
-        required: true
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -25,7 +23,7 @@ jobs:
     steps:
       - uses: unitasglobal/nio-shared-actions/review-cleanup@main
         with:
-          repo_token: ${{ secrets.GH_BOT_PAT }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
           python_version: ${{ inputs.python_version }}
 
       - name: Post Workflow Failed to Slack
