@@ -153,7 +153,7 @@ jobs:
 
       - name: Build and deploy images
         shell: bash
-        run: ./run docs build-docs && ./run cdk --modifier ${{ inputs.modifier }} prepare-ecr-image --multibuilder ${{ steps.buildx-setup.outputs.name }}
+        run: ./run docs build-docs && ./run cdk --review ${{ github.event.number }} prepare-ecr-image --multibuilder ${{ steps.buildx-setup.outputs.name }}
 
   deploy-review:
     name: Deploy Review Environment
