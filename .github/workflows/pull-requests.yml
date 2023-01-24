@@ -135,10 +135,28 @@ jobs:
           codecov-token: ${{ secrets.CODECOV_TOKEN }}
           python_version: ${{ inputs.python_version }}
 
+  build-lambda-image:
+    name: Build Lambda ECR Image
+    needs: [changes, static-analysis, check-merge-base]
+    if: ${{ failure() != true && cancelled() != true && (needs.changes.outputs.src == 'true' || needs.changes.outputs.stack-files == 'true') }}
+    runs-on: ubuntu-latest-8-cores
+    steps:
+      - uses: unitasglobal/nio-shared-actions/python-setup@main
+
+      - uses: docker/setup-buildx-action@v2
+        id: buildx-setup
+        with:
+          platforms: linux/amd64,linux/arm64
+          use: false
+
+      - name: Build and deploy images
+        shell: bash
+        run: ./run docs build-docs && ./run cdk --modifier ${{ inputs.modifier }} prepare-ecr-image --multibuilder ${{ steps.buildx-setup.outputs.name }}
+
   deploy-review:
     name: Deploy Review Environment
     concurrency: deploy-review-${{ github.ref_name }}
-    needs: [changes, static-analysis, test, db-branch-check, check-merge-base]
+    needs: [changes, static-analysis, test, db-branch-check, check-merge-base, build-lambda-image]
     if: ${{ failure() != true && cancelled() != true && (needs.changes.outputs.src == 'true' || needs.changes.outputs.stack-files == 'true') }}
     runs-on: ubuntu-latest
     steps:
