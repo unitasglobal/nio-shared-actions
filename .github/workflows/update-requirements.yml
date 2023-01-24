@@ -20,7 +20,7 @@ env:
 jobs:
   build-requirements:
     name: Build Requirements ECR Image
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-8-cores
     steps:
       - uses: unitasglobal/nio-shared-actions/python-setup@main
         with:
