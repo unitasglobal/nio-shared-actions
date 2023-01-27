@@ -14,8 +14,4 @@ runs:
 
     - name: Publish Library
       shell: bash
-      run: ./run test pypi-has-version || poetry publish --build -r nio
-
-    - name: Post Workflow Failed to Slack
-      shell: bash
-      run: ./run pipeline post-library-released-to-slack
+      run: ./run test pypi-has-version || (poetry publish --build -r nio && ./run pipelin post-library-released-to-slack)
