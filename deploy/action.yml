@@ -83,7 +83,7 @@ runs:
       run: ./run cdk deploy ${{ inputs.deploy_flag }} --multibuilder ${{ steps.buildx-setup.outputs.name }}
 
     - name: Test Deployed Stack
-      if: ${{ steps.check_deploy_tests.files_exists == 'true' }}
+      if: ${{ steps.check_deploy_tests.outputs.files_exists == 'true' }}
       shell: bash
       run: ./run test deployed
 
