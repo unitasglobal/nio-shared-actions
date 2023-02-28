@@ -6,7 +6,7 @@ authors = ["Lewis Franklin <lewis.franklin@unitasglobal.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.11"
-unitas-tools = "^0.24.1"
+unitas-tools = "^0.24.2"
 
 [tool.poetry.dev-dependencies]
 
