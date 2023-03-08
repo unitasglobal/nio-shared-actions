@@ -1816,14 +1816,14 @@ reference = "nio"
 
 [[package]]
 name = "unitas-tools"
-version = "0.24.2"
+version = "0.24.5"
 description = "Unitas Tools Library"
 category = "main"
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "unitas_tools-0.24.2-py3-none-any.whl", hash = "sha256:02ba5767e775a96f9c0b77609695d8112d692232f39c7b721e56245eb3de625e"},
-    {file = "unitas_tools-0.24.2.tar.gz", hash = "sha256:6eb6effdc3848ad9a71a92529c3f810f3bf66a87b5d5762bf2a8bfb7ed978cc6"},
+    {file = "unitas_tools-0.24.5-py3-none-any.whl", hash = "sha256:6c7dedbaf51304129a2cd775c2cb2d72e9ffa3c906e07ec0c59b34bcd6caacf9"},
+    {file = "unitas_tools-0.24.5.tar.gz", hash = "sha256:e6b952e026adc42c13ca3a73e0a0b54575ea851d58029b751118541ee4be3566"},
 ]
 
 [package.dependencies]
@@ -1902,4 +1902,4 @@ reference = "nio"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "2a7e3d32c9c93519af7e1402eca36c3375991f3bfe651f37ccf2e1b8ba5723ab"
+content-hash = "d6308d4f9e5ea313497734a3cb11dcbe71f4b328ac7521eb24f61b6d56fa1989"
