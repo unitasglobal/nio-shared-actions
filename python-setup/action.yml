@@ -40,6 +40,11 @@ runs:
       with:
         python-version: ${{ inputs.python_version }}
 
+    - name: Setup Packer
+      uses: hashicorp/setup-packer@main
+      with:
+        version: "latest"
+
     - name: Install Poetry
       shell: bash
       run: pip install poetry
