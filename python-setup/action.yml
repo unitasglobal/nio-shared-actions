@@ -29,7 +29,7 @@ runs:
       uses: actions/setup-node@v3
       if: ${{ inputs.install_node == 'true' }}
       with:
-        node-version: "14"
+        node-version: "18"
 
     - name: Install zip
       if: runner.os == 'Linux'
