@@ -5,6 +5,10 @@ inputs:
     description: "Install node"
     required: false
     default: "false"
+  install_lfs:
+    description: "Install git-lfs"
+    required: false
+    default: "false"
   fetch_depth:
     description: "Number of commits to fetch. 0 indicates all history for all branches and tags."
     required: false
@@ -19,7 +23,7 @@ runs:
     - uses: actions/checkout@v3
       with:
         fetch-depth: ${{ inputs.fetch_depth }}
-        lfs: true
+        lfs: ${{ inputs.install_lfs }}
 
     - name: Set up QEMU
       if: runner.os == 'Linux'
