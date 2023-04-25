@@ -3,6 +3,7 @@ name = "nio-shared-actions"
 version = "0.1.0"
 description = "Shared GitHub Actions for NIO Team Projects"
 authors = ["Lewis Franklin <lewis.franklin@unitasglobal.com>"]
+repository = "https://github.com/unitasglobal/nio-shared-actions"
 
 [tool.poetry.dependencies]
 python = "^3.11"
