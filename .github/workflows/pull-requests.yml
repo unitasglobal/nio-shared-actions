@@ -64,6 +64,7 @@ jobs:
               - 'poetry.lock'
               - 'src/**'
               - '${{ steps.project_src_name.outputs.project_src }}/**'
+              - 'yarn.lock'
             tests:
               - 'tests/**'
             stack-files:
@@ -172,7 +173,15 @@ jobs:
   deploy-review:
     name: Deploy Review Environment
     concurrency: deploy-review-${{ github.ref_name }}
-    needs: [changes, static-analysis, test, db-branch-check, check-merge-base, build-lambda-image]
+    needs:
+      [
+        changes,
+        static-analysis,
+        test,
+        db-branch-check,
+        check-merge-base,
+        build-lambda-image,
+      ]
     if: ${{ failure() != true && cancelled() != true && (needs.changes.outputs.src == 'true' || needs.changes.outputs.stack-files == 'true') }}
     runs-on: ubuntu-latest
     steps:
