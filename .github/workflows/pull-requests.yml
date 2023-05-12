@@ -170,6 +170,37 @@ jobs:
         shell: bash
         run: ./run cdk --review ${{ github.event.number }} prepare-ecr-image --multibuilder ${{ steps.buildx-setup.outputs.name }}
 
+  build-ami-image:
+    name: Build Ec2 AMI Image
+    needs: [changes, static-analysis, check-merge-base]
+    if: ${{ failure() != true && cancelled() != true && (needs.changes.outputs.src == 'true' || needs.changes.outputs.stack-files == 'true') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: unitasglobal/nio-shared-actions/python-setup@main
+        with:
+          python_version: ${{ inputs.python_version }}
+
+      - uses: docker/setup-buildx-action@v2
+        id: buildx-setup
+        with:
+          platforms: linux/amd64,linux/arm64
+          use: false
+
+      - name: Check for Docs
+        id: check_docs
+        uses: andstor/file-existence-action@v2
+        with:
+          files: "docs/*"
+
+      - name: Build user docs for deploy
+        if: ${{ steps.check_docs.outputs.files_exists == 'true' }}
+        shell: bash
+        run: ./run docs build-docs
+
+      - name: Build and deploy images
+        shell: bash
+        run: ./run cdk --review ${{ github.event.number }} prepare-ami
+
   deploy-review:
     name: Deploy Review Environment
     concurrency: deploy-review-${{ github.ref_name }}
@@ -181,6 +212,7 @@ jobs:
         db-branch-check,
         check-merge-base,
         build-lambda-image,
+        build-ami-image,
       ]
     if: ${{ failure() != true && cancelled() != true && (needs.changes.outputs.src == 'true' || needs.changes.outputs.stack-files == 'true') }}
     runs-on: ubuntu-latest
