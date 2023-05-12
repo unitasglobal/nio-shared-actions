@@ -64,14 +64,18 @@ runs:
       with:
         files: "tests/deploy_tests/*"
 
-    - name: Ensure No Dependent Workflows In Progress
-      shell: bash
-      run: ./run pipeline check-dependent-workflows ${{ inputs.deploy_flag }}
-
     - name: Build user docs for deploy
       if: ${{ steps.check_docs.outputs.files_exists == 'true' }}
       shell: bash
       run: ./run docs build-docs
+
+    - name: Ensure AMI is prepared
+      shell: bash
+      run: ./run cdk prepare-ami
+
+    - name: Ensure No Dependent Workflows In Progress
+      shell: bash
+      run: ./run pipeline check-dependent-workflows ${{ inputs.deploy_flag }}
 
     - name: Update IAM Permissions
       if: ${{ inputs.update_iam == 'true' }}
