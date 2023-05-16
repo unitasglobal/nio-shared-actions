@@ -171,7 +171,7 @@ jobs:
         run: ./run cdk --review ${{ github.event.number }} prepare-ecr-image --multibuilder ${{ steps.buildx-setup.outputs.name }}
 
   build-ami-image:
-    name: Build Ec2 AMI Image
+    name: Build EC2 AMI Image
     needs: [changes, static-analysis, check-merge-base]
     if: ${{ failure() != true && cancelled() != true && (needs.changes.outputs.src == 'true' || needs.changes.outputs.stack-files == 'true') }}
     runs-on: ubuntu-latest
