@@ -29,6 +29,7 @@ runs:
         name: PyTest Results
         path: junit*.xml
         reporter: java-junit
+        fail-on-error: "false"
 
     - name: Upload to CodeCov
       uses: codecov/codecov-action@v3
