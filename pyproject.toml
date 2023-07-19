@@ -20,3 +20,8 @@ build-backend = "poetry.core.masonry.api"
 [[tool.poetry.source]]
 name = "nio"
 url = "https://nio-pypi.nexus.unitasglobal.net/simple/"
+priority = "supplemental"
+
+[[tool.poetry.source]]
+name = "PyPI"
+priority = "primary"
