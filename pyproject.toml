@@ -7,7 +7,7 @@ repository = "https://github.com/unitasglobal/nio-shared-actions"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-unitas-tools = "^0.24.5"
+unitas-tools = "^1.3.1"
 
 [tool.unitas_tools]
 exclude_cmd_groups = ["auth", "aws", "cdk", "db", "docker", "docs", "test", "data"]
