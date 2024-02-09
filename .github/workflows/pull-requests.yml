@@ -65,8 +65,6 @@ jobs:
               - 'src/**'
               - '${{ steps.project_src_name.outputs.project_src }}/**'
               - 'yarn.lock'
-              - '*.lock'
-              - '*.toml'
             tests:
               - 'tests/**'
             stack-files:
