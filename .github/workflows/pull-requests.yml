@@ -65,8 +65,6 @@ jobs:
               - 'src/**'
               - '${{ steps.project_src_name.outputs.project_src }}/**'
               - 'yarn.lock'
-              - '*.lock'
-              - '*.toml'
             tests:
               - 'tests/**'
             stack-files:
@@ -133,7 +131,7 @@ jobs:
   test:
     name: Run Tests
     needs: [changes, static-analysis, check-merge-base]
-    if: ${{ needs.changes.outputs.has_tests == 'true' && (needs.changes.outputs.tests == 'true' || needs.changes.outputs.src == 'true' || needs.changes.outputs.ci-files == 'true') }}
+    if: ${{ !failure() && !cancelled() && needs.changes.outputs.has_tests == 'true' && (needs.changes.outputs.tests == 'true' || needs.changes.outputs.src == 'true' || needs.changes.outputs.ci-files == 'true') }}
     runs-on: ubuntu-latest
     steps:
       - uses: unitasglobal/nio-shared-actions/run-tests@main
