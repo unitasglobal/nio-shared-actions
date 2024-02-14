@@ -37,6 +37,7 @@ env:
   AWS_DEFAULT_REGION: us-east-1
   PACKER_GITHUB_API_TOKEN: ${{ secrets.PACKER_GH_TOKEN }}
   DOCKER_BUILDKIT: 1
+  NODE_OPTIONS: "--max_old_space_size=4096 prettier asm.js"
 jobs:
   changes:
     runs-on: ubuntu-latest
